@@ -1,26 +1,26 @@
-import React, { useState } from "react";
-import { useSpring, useSprings, animated, interpolate } from "react-spring";
-import { useDrag } from "react-use-gesture";
-import "./App.css";
+import React, { useState } from 'react';
+import { useSpring, useSprings, animated, interpolate } from 'react-spring';
+import { useDrag } from 'react-use-gesture';
+import './App.css';
 
 const cards = [
-  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80",
-  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80",
-  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80",
-  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80",
-  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80",
-  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80"
+  'https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80',
+  'https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80',
+  'https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80',
+  'https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80',
+  'https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80',
+  'https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80'
 ];
 
 // These two are just helpers, they curate spring data, values that are later being interpolated into css
 const to = i => ({
   x: 0,
-  y: i * -4,
+  y: i * 8,
   scale: 1,
-  rot: -10 + Math.random() * 20,
+  rot: 0,
   delay: i * 100
 });
-const from = i => ({ x: 0, rot: 0, scale: 1.5, y: -1000 });
+const from = i => ({ x: 0, rot: 0, scale: 1.5, y: window.outerHeight });
 // This is being used down there in the view, it interpolates rotation and scale into a css transform
 const transform = (r, s) =>
   `perspective(1500px) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
@@ -51,8 +51,8 @@ function ZStackCardView() {
         const rot = xDelta / 100 + (isGone ? dir * 10 * velocity : 0); // How much the card tilts, flicking it harder makes it rotate faster
         const scale = down ? 1.1 : 1; // Active cards lift up a bit
 
-        console.log("window.innerWidth", window.innerWidth);
-        console.log("window.innerHeight", window.innerHeight);
+        console.log('window.innerWidth', window.innerWidth);
+        console.log('window.innerHeight', window.innerHeight);
 
         return {
           x,
@@ -73,7 +73,10 @@ function ZStackCardView() {
       className="outer"
       key={i}
       style={{
-        transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`)
+        transform: interpolate(
+          [x, y],
+          (x, y) => `perspective(200px) translate3d(${x}px, ${y}px, ${4 * i}px)`
+        )
       }}
     >
       {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which) */}
