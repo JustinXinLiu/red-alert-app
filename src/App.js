@@ -15,7 +15,7 @@ const cards = [
 // These two are just helpers, they curate spring data, values that are later being interpolated into css
 const to = i => ({
   x: 0,
-  y: i * 8,
+  y: i * 12,
   scale: 1,
   rot: 0,
   delay: i * 100
@@ -75,7 +75,7 @@ function ZStackCardView() {
       style={{
         transform: interpolate(
           [x, y],
-          (x, y) => `perspective(200px) translate3d(${x}px, ${y}px, ${4 * i}px)`
+          (x, y) => `perspective(100px) translate3d(${x}px, ${y}px, ${4 * i}px)`
         )
       }}
     >
