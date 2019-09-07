@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { useSpring, useSprings, animated, interpolate } from "react-spring";
+import { useSprings, animated, interpolate } from "react-spring";
 import { useDrag } from "react-use-gesture";
 import "./App.css";
+import { AppBar } from "./components";
 
 const cards = ["", "", "", ""];
-const originalSize = cards.length;
+// const originalSize = cards.length;
 
 // This is just helpers, they curate spring data, values that are later being interpolated into css
 const from = i => ({ x: 0, rot: 0, scale: 1.5, y: window.outerHeight });
@@ -24,7 +25,7 @@ function ZStackCardView() {
     delay: i * 100
   });
 
-  const [props, set, stop] = useSprings(cards.length, i => ({
+  const [props, set] = useSprings(cards.length, i => ({
     ...to(i),
     from: from(i)
   })); // Create a bunch of springs using the helpers above
@@ -86,8 +87,8 @@ function ZStackCardView() {
         });
       }
 
-      if (!down && gone.size === originalSize)
-        setTimeout(() => gone.clear() || set(i => to(i)), 600);
+      // if (!down && gone.size === originalSize)
+      //   setTimeout(() => gone.clear() || set(i => to(i)), 600);
     }
   );
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
@@ -115,36 +116,12 @@ function ZStackCardView() {
   ));
 }
 
-// const calc = (x, y) => [
-//   -(y - window.innerHeight / 2) / 40,
-//   (x - window.innerWidth / 2) / 40,
-//   1.01
-// ];
-// const transform = (x, y, s) =>
-//   `perspective(2400px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`;
-
 function App() {
-  // const [restShadow, setRestShadow] = useState(false);
-
-  // const [props, set] = useSpring(() => ({
-  //   xys: [0, 0, 1],
-  //   config: { mass: 2, tension: 400, friction: 36 }
-  // }));
-
   return (
     <div className="app">
-      <div className="card-container">
-        {/* <animated.div
-          className={`card ${restShadow ? "rest-shadow" : ""}`}
-          onPointerEnter={() => setRestShadow(false)}
-          onPointerMove={({ clientX: x, clientY: y }) =>
-            set({ xys: calc(x, y) })
-          }
-          onPointerOut={() => set({ xys: [0, 0, 1] })}
-          onTouchEnd={() => setRestShadow(true)}
-          style={{ transform: props.xys.interpolate(transform) }}
-        /> */}
+      <AppBar />
 
+      <div className="card-container">
         <ZStackCardView />
       </div>
     </div>
