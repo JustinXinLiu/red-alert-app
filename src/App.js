@@ -1,16 +1,10 @@
 import React, { useState } from "react";
-import { useSprings, animated, interpolate } from "react-spring";
+import { useSpring, useSprings, animated, interpolate } from "react-spring";
 import { useDrag } from "react-use-gesture";
 import "./App.css";
 
-const cards = [
-  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80",
-  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80",
-  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80",
-  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80",
-  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80",
-  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80"
-];
+const cards = ["", "", "", ""];
+const originalSize = cards.length;
 
 // This is just helpers, they curate spring data, values that are later being interpolated into css
 const from = i => ({ x: 0, rot: 0, scale: 1.5, y: window.outerHeight });
@@ -24,7 +18,7 @@ function ZStackCardView() {
   // This is just helpers, they curate spring data, values that are later being interpolated into css
   const to = i => ({
     x: 0,
-    y: (cards.length - 1 - i) * -16,
+    y: (cards.length - 1 - i) * -18,
     scale: 1,
     rot: 0,
     delay: i * 100
@@ -42,7 +36,6 @@ function ZStackCardView() {
       delta: [xDelta, yDelta],
       direction: [xDir, yDir],
       velocity,
-      first,
       last
     }) => {
       const trigger = velocity > 0.2; // If you flick hard enough it should trigger the card to fly out
@@ -54,12 +47,11 @@ function ZStackCardView() {
           cards.splice(index, 1);
         }
       }
+
       set(i => {
         if (index !== i) return; // We're only interested in changing spring-data for the current spring
         const isGone = gone.has(index);
 
-        console.log("i", i);
-        // console.log("cards.length", cards.length);
         // console.log("isGone", isGone);
         // console.log("down", down);
 
@@ -68,7 +60,7 @@ function ZStackCardView() {
           ? window.innerHeight
           : down
           ? yDelta
-          : (cards.length - 1 - i) * -16;
+          : (cards.length - 1 - i) * -18;
         const rot = isGone
           ? xDelta / 40 + dir * 10 * velocity
           : down
@@ -77,19 +69,6 @@ function ZStackCardView() {
         const scale = down ? 1.1 : 1; // Active cards lift up a bit
 
         // console.log("yDir", yDir);
-
-        if (first) {
-        }
-
-        if (last) {
-          console.log("drag ended");
-
-          if (!down) {
-            console.log("final", i);
-            set(i => to(i));
-            stop();
-          }
-        }
 
         return {
           x,
@@ -101,8 +80,14 @@ function ZStackCardView() {
         };
       });
 
-      // if (!down && gone.size === cards.length)
-      //   setTimeout(() => gone.clear() || set(i => to(i)), 600);
+      if (last && !down) {
+        set(i => {
+          if (i < cards.length) return to(i);
+        });
+      }
+
+      if (!down && gone.size === originalSize)
+        setTimeout(() => gone.clear() || set(i => to(i)), 600);
     }
   );
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
