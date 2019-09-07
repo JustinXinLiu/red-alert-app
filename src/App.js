@@ -1,25 +1,18 @@
-import React, { useState } from 'react';
-import { useSpring, useSprings, animated, interpolate } from 'react-spring';
-import { useDrag } from 'react-use-gesture';
-import './App.css';
+import React, { useState } from "react";
+import { useSprings, animated, interpolate } from "react-spring";
+import { useDrag } from "react-use-gesture";
+import "./App.css";
 
 const cards = [
-  'https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80',
-  'https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80',
-  'https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80',
-  'https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80',
-  'https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80',
-  'https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80'
+  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80",
+  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80",
+  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80",
+  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80",
+  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80",
+  "https://images.unsplash.com/photo-1566863244489-a5e7946f46f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80"
 ];
 
-// These two are just helpers, they curate spring data, values that are later being interpolated into css
-const to = i => ({
-  x: 0,
-  y: i * 12,
-  scale: 1,
-  rot: 0,
-  delay: i * 100
-});
+// This is just helpers, they curate spring data, values that are later being interpolated into css
 const from = i => ({ x: 0, rot: 0, scale: 1.5, y: window.outerHeight });
 // This is being used down there in the view, it interpolates rotation and scale into a css transform
 const transform = (r, s) =>
@@ -27,7 +20,17 @@ const transform = (r, s) =>
 
 function ZStackCardView() {
   const [gone] = useState(() => new Set()); // The set flags all the cards that are flicked out
-  const [props, set] = useSprings(cards.length, i => ({
+
+  // This is just helpers, they curate spring data, values that are later being interpolated into css
+  const to = i => ({
+    x: 0,
+    y: (cards.length - 1 - i) * -16,
+    scale: 1,
+    rot: 0,
+    delay: i * 100
+  });
+
+  const [props, set, stop] = useSprings(cards.length, i => ({
     ...to(i),
     from: from(i)
   })); // Create a bunch of springs using the helpers above
@@ -38,19 +41,34 @@ function ZStackCardView() {
       down,
       delta: [xDelta, yDelta],
       direction: [xDir, yDir],
-      velocity
+      velocity,
+      first,
+      last
     }) => {
       const trigger = velocity > 0.2; // If you flick hard enough it should trigger the card to fly out
       const dir = xDir < 0 ? -1 : 1; // Direction should either point left or right
-      if (!down && trigger && yDir >= 0) gone.add(index); // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out
+      if (!down && trigger && yDir >= 0) {
+        gone.add(index); // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out
+
+        if (index > -1) {
+          cards.splice(index, 1);
+        }
+      }
       set(i => {
         if (index !== i) return; // We're only interested in changing spring-data for the current spring
         const isGone = gone.has(index);
-        console.log('isGone', isGone);
-        console.log('down', down);
+
+        console.log("i", i);
+        // console.log("cards.length", cards.length);
+        // console.log("isGone", isGone);
+        // console.log("down", down);
 
         const x = isGone ? (window.innerWidth / 2) * dir : down ? xDelta : 0; // When a card is gone it flys out left or right, otherwise goes back to zero
-        const y = isGone ? window.innerHeight : down ? yDelta : i * 12;
+        const y = isGone
+          ? window.innerHeight
+          : down
+          ? yDelta
+          : (cards.length - 1 - i) * -16;
         const rot = isGone
           ? xDelta / 40 + dir * 10 * velocity
           : down
@@ -58,7 +76,20 @@ function ZStackCardView() {
           : 0; // How much the card tilts, flicking it harder makes it rotate faster
         const scale = down ? 1.1 : 1; // Active cards lift up a bit
 
-        console.log('yDir', yDir);
+        // console.log("yDir", yDir);
+
+        if (first) {
+        }
+
+        if (last) {
+          console.log("drag ended");
+
+          if (!down) {
+            console.log("final", i);
+            set(i => to(i));
+            stop();
+          }
+        }
 
         return {
           x,
@@ -69,8 +100,9 @@ function ZStackCardView() {
           config: { friction: 50, tension: down ? 800 : isGone ? 200 : 500 }
         };
       });
-      if (!down && gone.size === cards.length)
-        setTimeout(() => gone.clear() || set(i => to(i)), 600);
+
+      // if (!down && gone.size === cards.length)
+      //   setTimeout(() => gone.clear() || set(i => to(i)), 600);
     }
   );
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
