@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useSprings, animated, interpolate } from "react-spring";
 import { useDrag } from "react-use-gesture";
+import { createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
 import "./App.css";
 import { AppBar } from "./components";
 
@@ -116,15 +118,27 @@ function ZStackCardView() {
   ));
 }
 
+const theme = createMuiTheme({
+  palette: {
+    primary: { 500: "#fccb1e" },
+    // theme.palette.action.active
+    action: { active: "rgba(3,2,1,0.2)" }
+  }
+});
+
 function App() {
   return (
-    <div className="app">
-      <AppBar />
+    <ThemeProvider theme={theme}>
+      <div className="app">
+        <div className="header">
+          <AppBar />
+        </div>
 
-      <div className="card-container">
-        <ZStackCardView />
-      </div>
-    </div>
+        <div className="card-container">
+          <ZStackCardView />
+        </div>
+      </div>{" "}
+    </ThemeProvider>
   );
 }
 
