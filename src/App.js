@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { useSprings, animated, interpolate } from 'react-spring';
-import { useDrag } from 'react-use-gesture';
-import { createMuiTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/styles';
-import './App.css';
-import { AppBar } from './components';
+import React, { useState } from "react";
+import { useSprings, animated, interpolate } from "react-spring";
+import { useDrag } from "react-use-gesture";
+import { createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
+import "./App.css";
+import { AppBar } from "./components";
 
-const cards = ['', '', '', ''];
+const cards = ["", "", "", ""];
 // const originalSize = cards.length;
 
 // This is just helpers, they curate spring data, values that are later being interpolated into css
@@ -16,7 +16,6 @@ const transform = (r, s) =>
   `perspective(1500px) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
 
 function ZStackCardView() {
-  // const [restShadow, setRestShadow] = useState(false);
   const [gone] = useState(() => new Set()); // The set flags all the cards that are flicked out
 
   // This is just helpers, they curate spring data, values that are later being interpolated into css
@@ -109,12 +108,6 @@ function ZStackCardView() {
       {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which) */}
       <animated.div
         className="card"
-        // className={`card ${restShadow ? 'rest-shadow' : ''}`}
-        // onPointerEnter={e => {
-        //   e.stopPropagation();
-        //   setRestShadow(false);
-        // }}
-        // onTouchEnd={() => setRestShadow(true)}
         {...bind(i)}
         style={{
           transform: interpolate([rot, scale], transform),
@@ -127,9 +120,9 @@ function ZStackCardView() {
 
 const theme = createMuiTheme({
   palette: {
-    primary: { 500: '#fccb1e' },
+    primary: { 500: "#fccb1e" },
     // theme.palette.action.active
-    action: { active: 'rgba(3,2,1,0.2)' }
+    action: { active: "rgba(3,2,1,0.2)" }
   }
 });
 

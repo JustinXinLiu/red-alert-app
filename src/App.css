@@ -35,9 +35,9 @@
 }
 
 .card:hover {
-  box-shadow: 0px 12px 40px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 12px 40px 4px rgba(0, 0, 0, 0.06);
 }
 
-.card.rest-shadow {
-  box-shadow: 0px 12px 24px 0 rgba(0, 0, 0, 0.025);
+.card:active {
+  box-shadow: 0px 12px 40px 4px rgba(0, 0, 0, 0.1);
 }
