@@ -8,7 +8,12 @@ import SaveIcon from "@material-ui/icons/Save";
 import ShareIcon from "@material-ui/icons/Share";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-const actions = [
+const inboxActions = [
+  { icon: <ShareIcon />, name: "Share" },
+  { icon: <DeleteIcon />, name: "Delete" }
+];
+
+const reminderActions = [
   { icon: <SaveIcon />, name: "Save" },
   { icon: <ShareIcon />, name: "Share" },
   { icon: <DeleteIcon />, name: "Delete" }
@@ -22,19 +27,24 @@ const useStyles = makeStyles(theme => ({
 
 function ActionBar(props) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [inboxActionsOpen, setInboxActionsOpen] = React.useState(false);
+  const [reminderActionsOpen, setReminderActionsOpen] = React.useState(false);
 
-  const handleClick = () => {
-    setOpen(prevOpen => !prevOpen);
+  const handleInboxClick = () => {
+    setInboxActionsOpen(prevOpen => !prevOpen);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleInboxClose = () => {
+    setInboxActionsOpen(false);
   };
 
-  // const handleOpen = () => {
-  //   setOpen(true);
-  // };
+  const handleReminderClick = () => {
+    setReminderActionsOpen(prevOpen => !prevOpen);
+  };
+
+  const handleReminderClose = () => {
+    setReminderActionsOpen(false);
+  };
 
   return (
     <div className="ActionBar">
@@ -42,17 +52,17 @@ function ActionBar(props) {
         className={classes.button}
         ariaLabel="Inbox options"
         icon={<SpeedDialIcon />}
-        onBlur={handleClose}
-        onClick={handleClick}
-        onClose={handleClose}
-        open={open}
+        onBlur={handleInboxClose}
+        onClick={handleInboxClick}
+        onClose={handleInboxClose}
+        open={inboxActionsOpen}
       >
-        {actions.map(action => (
+        {inboxActions.map(action => (
           <SpeedDialAction
             key={action.name}
             icon={action.icon}
             tooltipTitle={action.name}
-            onClick={handleClick}
+            onClick={handleInboxClick}
           />
         ))}
       </SpeedDial>
@@ -61,17 +71,17 @@ function ActionBar(props) {
         className={classes.button}
         ariaLabel="Inbox options"
         icon={<SpeedDialIcon />}
-        onBlur={handleClose}
-        onClick={handleClick}
-        onClose={handleClose}
-        open={open}
+        onBlur={handleReminderClose}
+        onClick={handleReminderClick}
+        onClose={handleReminderClose}
+        open={reminderActionsOpen}
       >
-        {actions.map(action => (
+        {reminderActions.map(action => (
           <SpeedDialAction
             key={action.name}
             icon={action.icon}
             tooltipTitle={action.name}
-            onClick={handleClick}
+            onClick={handleReminderClick}
           />
         ))}
       </SpeedDial>
