@@ -129,7 +129,21 @@ const theme = createMuiTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <div className="app">
+      <div
+        className="app"
+        onTouchEnd={e => {
+          const touches = e.changedTouches;
+          console.log("touches", touches);
+          if (touches && touches.length > 0) {
+            const touch = touches[0];
+            const elem = document.elementFromPoint(
+              touch.clientX,
+              touch.clientY
+            );
+            console.log("Touch over element", elem);
+          }
+        }}
+      >
         <div className="header">
           <AppBar />
         </div>
