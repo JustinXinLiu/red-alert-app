@@ -12,7 +12,7 @@ function AppBar(props) {
   const classes = useStyles();
 
   return (
-    <div className="root">
+    <div className="AppBar">
       <IconButton className={classes.button} aria-label="menu">
         <SvgIcon>
           <path d="M20.6,7L20.6,7c0,0.6-0.4,1-1,1H4.4c-0.6,0-1-0.4-1-1l0,0c0-0.6,0.4-1,1-1h15.2C20.1,6,20.6,6.4,20.6,7z" />
