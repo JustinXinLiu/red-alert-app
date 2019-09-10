@@ -4,7 +4,7 @@ import { useDrag } from "react-use-gesture";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import "./App.css";
-import { AppBar } from "./components";
+import { AppBar, ActionBar } from "./components";
 
 const cards = ["", "", "", ""];
 // const originalSize = cards.length;
@@ -135,6 +135,10 @@ function App() {
         </div>
 
         <ZStackCardView />
+
+        <div className="footer">
+          <ActionBar />
+        </div>
       </div>
     </ThemeProvider>
   );
