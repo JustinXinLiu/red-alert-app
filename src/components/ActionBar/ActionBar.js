@@ -52,6 +52,7 @@ function ActionBar(props) {
   return (
     <div className="ActionBar">
       <SpeedDial
+        id="reminder"
         className={classes.button}
         ariaLabel="Inbox options"
         icon={<SpeedDialIcon />}
@@ -71,6 +72,7 @@ function ActionBar(props) {
       </SpeedDial>
 
       <SpeedDial
+        id="inbox"
         className={classes.button}
         ariaLabel="Inbox options"
         icon={<SpeedDialIcon />}

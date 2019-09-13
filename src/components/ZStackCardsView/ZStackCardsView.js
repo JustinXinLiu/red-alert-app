@@ -21,15 +21,27 @@ function ZStackCardsView() {
   const handleAdditionalActionsOnTouchOver = e => {
     const touches = e.changedTouches;
     // console.log('touches', touches);
+
     if (touches && touches.length > 0) {
       const touch = touches[0];
       const elem = document.elementFromPoint(touch.clientX, touch.clientY);
-      // console.log('Touch over element', elem);
+      console.log('Touch over element', elem);
 
-      if (elem && elem.nodeName === 'svg') {
+      if (
+        elem &&
+        (elem.nodeName === 'button' ||
+          elem.nodeName === 'span' ||
+          elem.nodeName === 'svg' ||
+          elem.nodeName === 'path')
+      ) {
         dispatch({
           type: 'movePointerOverInbox',
           inboxState: { pointerOver: true }
+        });
+      } else {
+        dispatch({
+          type: 'movePointerOutsideInbox',
+          inboxState: { pointerOver: false }
         });
       }
     }
