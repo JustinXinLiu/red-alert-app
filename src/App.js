@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StateProvider } from './state';
-import { useSprings, animated, interpolate } from 'react-spring';
-import { useDrag } from 'react-use-gesture';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import './App.css';
