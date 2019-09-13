@@ -1,27 +1,27 @@
-import React from "react";
-import "./ActionBar.css";
-import { makeStyles } from "@material-ui/core/styles";
-import SpeedDial from "@material-ui/lab/SpeedDial";
-import SpeedDialIcon from "@material-ui/lab/SpeedDialIcon";
-import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
-import SaveIcon from "@material-ui/icons/Save";
-import ShareIcon from "@material-ui/icons/Share";
-import DeleteIcon from "@material-ui/icons/Delete";
+import React from 'react';
+import './ActionBar.css';
+import { makeStyles } from '@material-ui/core/styles';
+import SpeedDial from '@material-ui/lab/SpeedDial';
+import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
+import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+import SaveIcon from '@material-ui/icons/Save';
+import ShareIcon from '@material-ui/icons/Share';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const inboxActions = [
-  { icon: <ShareIcon />, name: "Share" },
-  { icon: <DeleteIcon />, name: "Delete" }
+  { icon: <ShareIcon />, name: 'Share' },
+  { icon: <DeleteIcon />, name: 'Delete' }
 ];
 
 const reminderActions = [
-  { icon: <SaveIcon />, name: "Save" },
-  { icon: <ShareIcon />, name: "Share" },
-  { icon: <DeleteIcon />, name: "Delete" }
+  { icon: <SaveIcon />, name: 'Save' },
+  { icon: <ShareIcon />, name: 'Share' },
+  { icon: <DeleteIcon />, name: 'Delete' }
 ];
 
 const useStyles = makeStyles(theme => ({
   button: {
-    justifySelf: "center"
+    justifySelf: 'center'
   }
 }));
 

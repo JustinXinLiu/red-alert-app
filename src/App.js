@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import { useSprings, animated, interpolate } from "react-spring";
-import { useDrag } from "react-use-gesture";
-import { createMuiTheme } from "@material-ui/core/styles";
-import { ThemeProvider } from "@material-ui/styles";
-import "./App.css";
-import { AppBar, ActionBar } from "./components";
+import React, { useState } from 'react';
+import { StateProvider } from './state';
+import { useSprings, animated, interpolate } from 'react-spring';
+import { useDrag } from 'react-use-gesture';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+import './App.css';
+import { AppBar, ActionBar } from './components';
 
-const cards = ["", "", "", ""];
+const cards = ['', '', '', ''];
 // const originalSize = cards.length;
 
 // This is just helpers, they curate spring data, values that are later being interpolated into css
@@ -17,11 +18,11 @@ const transform = (r, s) =>
 
 const handleAdditionalActionsOnTouchOver = e => {
   const touches = e.changedTouches;
-  console.log("touches", touches);
+  console.log('touches', touches);
   if (touches && touches.length > 0) {
     const touch = touches[0];
     const elem = document.elementFromPoint(touch.clientX, touch.clientY);
-    console.log("Touch over element", elem);
+    console.log('Touch over element', elem);
   }
 };
 
@@ -131,27 +132,46 @@ function ZStackCardView() {
 
 const theme = createMuiTheme({
   palette: {
-    primary: { 500: "#fccb1e" },
+    primary: { 500: '#fccb1e' },
     // theme.palette.action.active
-    action: { active: "rgba(3,2,1,0.2)" }
+    action: { active: 'rgba(3,2,1,0.2)' }
   }
 });
 
 function App() {
+  const initialState = {
+    inboxState: { pointerOver: false }
+  };
+
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case 'movePointerOverInbox':
+        return {
+          ...state,
+          pointer: action.inboxState
+        };
+
+      default:
+        return state;
+    }
+  };
+
   return (
-    <ThemeProvider theme={theme}>
-      <div className="app">
-        <div className="header">
-          <AppBar />
-        </div>
+    <StateProvider reducer={reducer} initialState={initialState}>
+      <ThemeProvider theme={theme}>
+        <div className="app">
+          <div className="header">
+            <AppBar />
+          </div>
 
-        <ZStackCardView />
+          <ZStackCardView />
 
-        <div className="footer">
-          <ActionBar />
+          <div className="footer">
+            <ActionBar />
+          </div>
         </div>
-      </div>
-    </ThemeProvider>
+      </ThemeProvider>
+    </StateProvider>
   );
 }
 
