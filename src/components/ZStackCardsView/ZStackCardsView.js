@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './ZStackCardsView.css';
 import { useSprings, animated, interpolate } from 'react-spring';
 import { useDrag } from 'react-use-gesture';
+import { useStateValue } from '../../state';
 
 const cards = ['', '', '', ''];
 // const originalSize = cards.length;
@@ -12,18 +13,27 @@ const from = i => ({ x: 0, rot: 0, scale: 1.5, y: window.outerHeight });
 const transform = (r, s) =>
   `perspective(1500px) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
 
-const handleAdditionalActionsOnTouchOver = e => {
-  const touches = e.changedTouches;
-  console.log('touches', touches);
-  if (touches && touches.length > 0) {
-    const touch = touches[0];
-    const elem = document.elementFromPoint(touch.clientX, touch.clientY);
-    console.log('Touch over element', elem);
-  }
-};
-
 function ZStackCardsView() {
+  const [, dispatch] = useStateValue();
+
   const [gone] = useState(() => new Set()); // The set flags all the cards that are flicked out
+
+  const handleAdditionalActionsOnTouchOver = e => {
+    const touches = e.changedTouches;
+    // console.log('touches', touches);
+    if (touches && touches.length > 0) {
+      const touch = touches[0];
+      const elem = document.elementFromPoint(touch.clientX, touch.clientY);
+      // console.log('Touch over element', elem);
+
+      if (elem && elem.nodeName === 'svg') {
+        dispatch({
+          type: 'movePointerOverInbox',
+          inboxState: { pointerOver: true }
+        });
+      }
+    }
+  };
 
   // This is just helpers, they curate spring data, values that are later being interpolated into css
   const to = i => ({

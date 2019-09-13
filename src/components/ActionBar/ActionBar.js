@@ -7,6 +7,7 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import SaveIcon from '@material-ui/icons/Save';
 import ShareIcon from '@material-ui/icons/Share';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { useStateValue } from '../../state';
 
 const inboxActions = [
   { icon: <ShareIcon />, name: 'Share' },
@@ -29,6 +30,8 @@ function ActionBar(props) {
   const classes = useStyles();
   const [inboxActionsOpen, setInboxActionsOpen] = React.useState(false);
   const [reminderActionsOpen, setReminderActionsOpen] = React.useState(false);
+
+  const [{ inboxState }, dispatcher] = useStateValue();
 
   const handleInboxClick = () => {
     setInboxActionsOpen(prevOpen => !prevOpen);
@@ -74,7 +77,7 @@ function ActionBar(props) {
         onBlur={handleReminderClose}
         onClick={handleReminderClick}
         onClose={handleReminderClose}
-        open={reminderActionsOpen}
+        open={inboxState.pointerOver}
       >
         {reminderActions.map(action => (
           <SpeedDialAction

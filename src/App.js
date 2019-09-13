@@ -21,9 +21,11 @@ function App() {
   const reducer = (state, action) => {
     switch (action.type) {
       case 'movePointerOverInbox':
+        console.log('action', action.inboxState);
+
         return {
           ...state,
-          pointer: action.inboxState
+          inboxState: action.inboxState
         };
 
       default:
