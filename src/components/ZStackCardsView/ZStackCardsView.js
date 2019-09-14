@@ -35,22 +35,19 @@ function ZStackCardsView() {
         switch (dial.parentElement.id) {
           case "inbox":
             dispatch({
-              type: "movePointerOverInbox",
-              touchState: { overInbox: true, overReminder: false }
+              type: "movePointerOverInbox"
             });
             break;
           case "reminder":
             dispatch({
-              type: "movePointerOverReminder",
-              touchState: { overInbox: false, overReminder: true }
+              type: "movePointerOverReminder"
             });
             break;
           default:
         }
       } else {
         dispatch({
-          type: "movePointerOut",
-          touchState: { overInbox: false, overReminder: false }
+          type: "movePointerOut"
         });
       }
     }
@@ -58,8 +55,7 @@ function ZStackCardsView() {
 
   const handleTouchEnd = () => {
     dispatch({
-      type: "movePointerOut",
-      touchState: { overInbox: false, overReminder: false }
+      type: "movePointerOut"
     });
   };
 

@@ -23,17 +23,17 @@ function App() {
       case "movePointerOverInbox":
         return {
           ...state,
-          touchState: action.touchState
+          touchState: { overInbox: true, overReminder: false }
         };
       case "movePointerOverReminder":
         return {
           ...state,
-          touchState: action.touchState
+          touchState: { overInbox: false, overReminder: true }
         };
       case "movePointerOut":
         return {
           ...state,
-          touchState: action.touchState
+          touchState: { overInbox: false, overReminder: false }
         };
 
       default:
