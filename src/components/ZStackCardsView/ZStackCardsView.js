@@ -14,7 +14,7 @@ const transform = (r, s) =>
   `perspective(1500px) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
 
 function ZStackCardsView() {
-  const [, dispatch] = useStateValue();
+  const [{ touchState }, dispatch] = useStateValue();
 
   const [gone] = useState(() => new Set()); // The set flags all the cards that are flicked out
 
@@ -34,29 +34,28 @@ function ZStackCardsView() {
       if (dial) {
         switch (dial.parentElement.id) {
           case "inbox":
-            dispatch({
-              type: "movePointerOverInbox"
-            });
+            if (!touchState.overInbox)
+              setTimeout(() => dispatch({ type: "movePointerOverInbox" }), 600);
             break;
           case "reminder":
-            dispatch({
-              type: "movePointerOverReminder"
-            });
+            if (!touchState.overReminder)
+              setTimeout(
+                () => dispatch({ type: "movePointerOverReminder" }),
+                600
+              );
             break;
           default:
         }
       } else {
-        dispatch({
-          type: "movePointerOut"
-        });
+        if (touchState.overInbox || touchState.overReminder)
+          dispatch({ type: "movePointerOut" });
       }
     }
   };
 
   const handleTouchEnd = () => {
-    dispatch({
-      type: "movePointerOut"
-    });
+    if (touchState.overInbox || touchState.overReminder)
+      dispatch({ type: "movePointerOut" });
   };
 
   // This is just helpers, they curate spring data, values that are later being interpolated into css
