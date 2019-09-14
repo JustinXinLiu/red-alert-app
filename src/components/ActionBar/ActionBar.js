@@ -20,40 +20,35 @@ const reminderActions = [
   { icon: <DeleteIcon />, name: "Delete" }
 ];
 
-const useStyles = makeStyles(theme => ({
-  button: {
-    justifySelf: "center"
+const useStyles = makeStyles(() => ({
+  root: {
+    justifySelf: "center",
+    zIndex: 1050,
+    display: "flex",
+    pointerEvents: touchState =>
+      touchState.overInbox || touchState.overReminder ? "auto" : "none"
   }
 }));
 
-function ActionBar(props) {
-  const classes = useStyles();
-  const [inboxActionsOpen, setInboxActionsOpen] = React.useState(false);
-  const [reminderActionsOpen, setReminderActionsOpen] = React.useState(false);
+function ActionBar() {
+  const [{ touchState }] = useStateValue();
+  // const [{ touchState }, dispatcher] = useStateValue();
 
-  const [{ touchState }, dispatcher] = useStateValue();
+  const classes = useStyles(touchState);
 
-  const handleInboxClick = () => {
-    setInboxActionsOpen(prevOpen => !prevOpen);
-  };
+  const handleInboxClick = () => {};
 
-  const handleInboxClose = () => {
-    setInboxActionsOpen(false);
-  };
+  const handleInboxClose = () => {};
 
-  const handleReminderClick = () => {
-    setReminderActionsOpen(prevOpen => !prevOpen);
-  };
+  const handleReminderClick = () => {};
 
-  const handleReminderClose = () => {
-    setReminderActionsOpen(false);
-  };
+  const handleReminderClose = () => {};
 
   return (
     <div className="ActionBar">
       <SpeedDial
         id="reminder"
-        className={classes.button}
+        className={classes.root}
         ariaLabel="Inbox options"
         icon={<SpeedDialIcon />}
         onBlur={handleInboxClose}
@@ -73,7 +68,7 @@ function ActionBar(props) {
 
       <SpeedDial
         id="inbox"
-        className={classes.button}
+        className={classes.root}
         ariaLabel="Inbox options"
         icon={<SpeedDialIcon />}
         onBlur={handleReminderClose}

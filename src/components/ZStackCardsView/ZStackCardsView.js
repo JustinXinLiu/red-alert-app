@@ -28,7 +28,11 @@ function ZStackCardsView() {
       // console.log("Touch over elements", elements.map(el => el.className));
 
       const dial = elements.find(el =>
-        el.classList.contains("MuiButtonBase-root")
+        el.classList.contains(
+          touchState.overInbox || touchState.overReminder
+            ? "MuiSpeedDial-root"
+            : "MuiButtonBase-root"
+        )
       );
 
       if (dial) {
