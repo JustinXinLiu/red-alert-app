@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import "./ZStackCardsView.css";
 import { useSprings, animated, interpolate } from "react-spring";
-import { useDrag } from "react-use-gesture";
+import { useGesture } from "react-use-gesture";
 import { useStateValue } from "../../state";
 
 const cards = ["", "", "", ""];
 // const originalSize = cards.length;
 
 // This is just helpers, they curate spring data, values that are later being interpolated into css
-const from = i => ({ x: 0, rot: 0, scale: 1.5, y: window.outerHeight });
+const from = () => ({ x: 0, rot: 0, scale: 1, y: window.outerHeight });
 // This is being used down there in the view, it interpolates rotation and scale into a css transform
 const transform = (r, s) =>
   `perspective(1500px) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
@@ -73,7 +73,7 @@ function ZStackCardsView() {
     from: from(i)
   })); // Create a bunch of springs using the helpers above
   // Create a gesture, we're interested in down-state, delta (current-pos - click-pos), direction and velocity
-  const bind = useDrag(
+  const bind = useGesture(
     ({
       args: [index],
       down,
