@@ -1,34 +1,39 @@
-import React from 'react';
-import { StateProvider } from './state';
-import { createMuiTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/styles';
-import './App.css';
-import { AppBar, ActionBar, ZStackCardsView } from './components';
+import React from "react";
+import { StateProvider } from "./state";
+import { createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
+import "./App.css";
+import { AppBar, ActionBar, ZStackCardsView } from "./components";
 
 const theme = createMuiTheme({
   palette: {
-    primary: { 500: '#fccb1e' },
+    primary: { 500: "#fccb1e" },
     // theme.palette.action.active
-    action: { active: 'rgba(3,2,1,0.2)' }
+    action: { active: "rgba(3,2,1,0.2)" }
   }
 });
 
 function App() {
   const initialState = {
-    inboxState: { pointerOver: false }
+    touchState: { overInbox: false, overReminder: false }
   };
 
   const reducer = (state, action) => {
     switch (action.type) {
-      case 'movePointerOverInbox':
+      case "movePointerOverInbox":
         return {
           ...state,
-          inboxState: action.inboxState
+          touchState: action.touchState
         };
-      case 'movePointerOutsideInbox':
+      case "movePointerOverReminder":
         return {
           ...state,
-          inboxState: action.inboxState
+          touchState: action.touchState
+        };
+      case "movePointerOut":
+        return {
+          ...state,
+          touchState: action.touchState
         };
 
       default:

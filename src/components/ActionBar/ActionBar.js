@@ -1,28 +1,28 @@
-import React from 'react';
-import './ActionBar.css';
-import { makeStyles } from '@material-ui/core/styles';
-import SpeedDial from '@material-ui/lab/SpeedDial';
-import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
-import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
-import SaveIcon from '@material-ui/icons/Save';
-import ShareIcon from '@material-ui/icons/Share';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { useStateValue } from '../../state';
+import React from "react";
+import "./ActionBar.css";
+import { makeStyles } from "@material-ui/core/styles";
+import SpeedDial from "@material-ui/lab/SpeedDial";
+import SpeedDialIcon from "@material-ui/lab/SpeedDialIcon";
+import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
+import SaveIcon from "@material-ui/icons/Save";
+import ShareIcon from "@material-ui/icons/Share";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { useStateValue } from "../../state";
 
 const inboxActions = [
-  { icon: <ShareIcon />, name: 'Share' },
-  { icon: <DeleteIcon />, name: 'Delete' }
+  { icon: <ShareIcon />, name: "Share" },
+  { icon: <DeleteIcon />, name: "Delete" }
 ];
 
 const reminderActions = [
-  { icon: <SaveIcon />, name: 'Save' },
-  { icon: <ShareIcon />, name: 'Share' },
-  { icon: <DeleteIcon />, name: 'Delete' }
+  { icon: <SaveIcon />, name: "Save" },
+  { icon: <ShareIcon />, name: "Share" },
+  { icon: <DeleteIcon />, name: "Delete" }
 ];
 
 const useStyles = makeStyles(theme => ({
   button: {
-    justifySelf: 'center'
+    justifySelf: "center"
   }
 }));
 
@@ -31,7 +31,7 @@ function ActionBar(props) {
   const [inboxActionsOpen, setInboxActionsOpen] = React.useState(false);
   const [reminderActionsOpen, setReminderActionsOpen] = React.useState(false);
 
-  const [{ inboxState }, dispatcher] = useStateValue();
+  const [{ touchState }, dispatcher] = useStateValue();
 
   const handleInboxClick = () => {
     setInboxActionsOpen(prevOpen => !prevOpen);
@@ -59,7 +59,7 @@ function ActionBar(props) {
         onBlur={handleInboxClose}
         onClick={handleInboxClick}
         onClose={handleInboxClose}
-        open={inboxActionsOpen}
+        open={touchState.overReminder}
       >
         {inboxActions.map(action => (
           <SpeedDialAction
@@ -79,7 +79,7 @@ function ActionBar(props) {
         onBlur={handleReminderClose}
         onClick={handleReminderClick}
         onClose={handleReminderClose}
-        open={inboxState.pointerOver}
+        open={touchState.overInbox}
       >
         {reminderActions.map(action => (
           <SpeedDialAction

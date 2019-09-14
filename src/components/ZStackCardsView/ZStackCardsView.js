@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import './ZStackCardsView.css';
-import { useSprings, animated, interpolate } from 'react-spring';
-import { useDrag } from 'react-use-gesture';
-import { useStateValue } from '../../state';
+import React, { useState } from "react";
+import "./ZStackCardsView.css";
+import { useSprings, animated, interpolate } from "react-spring";
+import { useDrag } from "react-use-gesture";
+import { useStateValue } from "../../state";
 
-const cards = ['', '', '', ''];
+const cards = ["", "", "", ""];
 // const originalSize = cards.length;
 
 // This is just helpers, they curate spring data, values that are later being interpolated into css
@@ -24,27 +24,43 @@ function ZStackCardsView() {
 
     if (touches && touches.length > 0) {
       const touch = touches[0];
-      const elem = document.elementFromPoint(touch.clientX, touch.clientY);
-      console.log('Touch over element', elem);
+      const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+      // console.log("Touch over elements", elements.map(el => el.className));
 
-      if (
-        elem &&
-        (elem.nodeName === 'button' ||
-          elem.nodeName === 'span' ||
-          elem.nodeName === 'svg' ||
-          elem.nodeName === 'path')
-      ) {
-        dispatch({
-          type: 'movePointerOverInbox',
-          inboxState: { pointerOver: true }
-        });
+      const dial = elements.find(el =>
+        el.classList.contains("MuiButtonBase-root")
+      );
+
+      if (dial) {
+        switch (dial.parentElement.id) {
+          case "inbox":
+            dispatch({
+              type: "movePointerOverInbox",
+              touchState: { overInbox: true, overReminder: false }
+            });
+            break;
+          case "reminder":
+            dispatch({
+              type: "movePointerOverReminder",
+              touchState: { overInbox: false, overReminder: true }
+            });
+            break;
+          default:
+        }
       } else {
         dispatch({
-          type: 'movePointerOutsideInbox',
-          inboxState: { pointerOver: false }
+          type: "movePointerOut",
+          touchState: { overInbox: false, overReminder: false }
         });
       }
     }
+  };
+
+  const handleTouchEnd = () => {
+    dispatch({
+      type: "movePointerOut",
+      touchState: { overInbox: false, overReminder: false }
+    });
   };
 
   // This is just helpers, they curate spring data, values that are later being interpolated into css
@@ -143,6 +159,7 @@ function ZStackCardsView() {
           backgroundImage: `url(${cards[i]})`
         }}
         onTouchMove={handleAdditionalActionsOnTouchOver}
+        onTouchEnd={handleTouchEnd}
       />
     </animated.div>
   ));
