@@ -10,14 +10,13 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { useStateValue } from "../../state";
 
 const inboxActions = [
-  { icon: <ShareIcon />, name: "Share" },
-  { icon: <DeleteIcon />, name: "Delete" }
+  { icon: <ShareIcon id="share" />, name: "Share" },
+  { icon: <DeleteIcon id="delete" />, name: "Delete" }
 ];
 
 const reminderActions = [
-  { icon: <SaveIcon />, name: "Save" },
-  { icon: <ShareIcon />, name: "Share" },
-  { icon: <DeleteIcon />, name: "Delete" }
+  { icon: <SaveIcon id="save" />, name: "Save" },
+  { icon: <ShareIcon id="share" />, name: "Share" }
 ];
 
 const useStyles = makeStyles(() => ({
@@ -74,7 +73,7 @@ function ActionBar() {
         onBlur={handleReminderClose}
         onClick={handleReminderClick}
         onClose={handleReminderClose}
-        open={touchState.overInbox}
+        open={true} //{touchState.overInbox}
       >
         {reminderActions.map(action => (
           <SpeedDialAction

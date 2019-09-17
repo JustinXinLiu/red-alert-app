@@ -25,7 +25,18 @@ function ZStackCardsView() {
     if (touches && touches.length > 0) {
       const touch = touches[0];
       const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
-      // console.log("Touch over elements", elements.map(el => el.className));
+      //console.log("Touch over elements", elements.map(el => el.className));
+
+      const connectedAction = elements.find(el =>
+        el.classList.contains("MuiFab-sizeSmall")
+      );
+
+      if (connectedAction) {
+        if (connectedAction.title === "Delete") {
+          console.log("connectedAction", connectedAction);
+          connectedAction.classList.toggle("active");
+        }
+      }
 
       const dial = elements.find(el =>
         el.classList.contains(
