@@ -73,7 +73,7 @@ function ActionBar() {
         onBlur={handleReminderClose}
         onClick={handleReminderClick}
         onClose={handleReminderClose}
-        open={true} //{touchState.overInbox}
+        open={touchState.overInbox}
       >
         {reminderActions.map(action => (
           <SpeedDialAction

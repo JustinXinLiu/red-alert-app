@@ -13,6 +13,8 @@ const from = () => ({ x: 0, rot: 0, scale: 1, y: window.outerHeight });
 const transform = (r, s) =>
   `perspective(1500px) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
 
+let _inboxEnter, _reminderEnter, _timeout;
+
 function ZStackCardsView() {
   const [{ touchState }, dispatch] = useStateValue();
 
@@ -49,19 +51,39 @@ function ZStackCardsView() {
       if (dial) {
         switch (dial.parentElement.id) {
           case "inbox":
-            if (!touchState.overInbox)
-              setTimeout(() => dispatch({ type: "movePointerOverInbox" }), 600);
+            if (!_inboxEnter) {
+              _inboxEnter = true;
+              console.log("_inboxEnter", _inboxEnter);
+
+              _timeout = setTimeout(() => {
+                dispatch({ type: "movePointerOverInbox" });
+                console.log("set inbox over");
+              }, 600);
+            }
             break;
           case "reminder":
-            if (!touchState.overReminder)
-              setTimeout(
-                () => dispatch({ type: "movePointerOverReminder" }),
-                600
-              );
+            if (!_reminderEnter) {
+              _reminderEnter = true;
+              console.log("_reminderEnter", _reminderEnter);
+
+              _timeout = setTimeout(() => {
+                dispatch({ type: "movePointerOverReminder" });
+                console.log("set reminder over");
+              }, 600);
+            }
             break;
           default:
         }
       } else {
+        _inboxEnter = false;
+        _reminderEnter = false;
+
+        if (_timeout) {
+          console.log("clear timeout", _timeout);
+          clearTimeout(_timeout);
+          _timeout = null;
+        }
+
         if (touchState.overInbox || touchState.overReminder)
           dispatch({ type: "movePointerOut" });
       }
