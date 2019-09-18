@@ -4,8 +4,6 @@ import { useSprings, animated, interpolate } from "react-spring";
 import { useGesture } from "react-use-gesture";
 import { useStateValue } from "../../state";
 
-console.log("render ZStackCardsView");
-
 const cards = ["", "", "", ""];
 // const originalSize = cards.length;
 
@@ -18,6 +16,8 @@ const transform = (r, s) =>
 let _inboxEnter, _reminderEnter, _timeout;
 
 function ZStackCardsView() {
+  console.log("ZStackCardsView function called...");
+
   const [{ touchState }, dispatch] = useStateValue();
 
   const [gone] = useState(() => new Set()); // The set flags all the cards that are flicked out
@@ -105,11 +105,11 @@ function ZStackCardsView() {
 
   const [props, set] = useSprings(cards.length, i => ({
     ...to(i),
-    from: from(i)
+    from: from()
   })); // Create a bunch of springs using the helpers above
 
   // Create a gesture, we're interested in down-state, delta (current-pos - click-pos), direction and velocity
-  const bind = useGesture(
+  const gesture = useGesture(
     ({
       args: [index],
       down,
@@ -173,10 +173,9 @@ function ZStackCardsView() {
     }
   );
 
-  // useEffect(() => {
-  //   console.log("render ZStackCardsView");
-  //   // console.log("render ZStackCardsView", touchState);
-  // }, []);
+  useEffect(() => {
+    console.log("render ZStackCardsView");
+  }, []);
 
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
   return props.map(({ x, y, rot, scale }, i) => (
@@ -193,7 +192,7 @@ function ZStackCardsView() {
       {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which) */}
       <animated.div
         className="card"
-        {...bind(i)}
+        {...gesture(i)}
         style={{
           transform: interpolate([rot, scale], transform),
           backgroundImage: `url(${cards[i]})`
