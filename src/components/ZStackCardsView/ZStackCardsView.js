@@ -4,11 +4,6 @@ import { useSprings, animated, interpolate } from "react-spring";
 import { useGesture } from "react-use-gesture";
 import { useStateValue } from "../../state";
 
-const cards = ["", "", "", ""];
-// const originalSize = cards.length;
-
-// This is just helpers, they curate spring data, values that are later being interpolated into css
-const from = () => ({ x: 0, rot: 0, scale: 1, y: window.outerHeight });
 // This is being used down there in the view, it interpolates rotation and scale into a css transform
 const transform = (r, s) =>
   `perspective(1500px) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
@@ -18,7 +13,12 @@ let _inboxEnter, _reminderEnter, _timeout;
 function ZStackCardsView() {
   console.log("ZStackCardsView function called...");
 
-  const [{ touchState }, dispatch] = useStateValue();
+  const [
+    { emailPreviewCards, cardSpringDataFrom, cardSpringDataTo, touchState },
+    dispatch
+  ] = useStateValue();
+
+  // const originalSize = emailPreviewCards.length;
 
   const [gone] = useState(() => new Set()); // The set flags all the cards that are flicked out
 
@@ -94,19 +94,17 @@ function ZStackCardsView() {
     }
   };
 
-  // This is just helpers, they curate spring data, values that are later being interpolated into css
-  const to = i => ({
-    x: 0,
-    y: (cards.length - 1 - i) * -18,
-    scale: 1,
-    rot: 0,
-    delay: i * 100
-  });
+  console.log("from", cardSpringDataFrom());
 
-  const [props, set] = useSprings(cards.length, i => ({
-    ...to(i),
-    from: from()
-  })); // Create a bunch of springs using the helpers above
+  const [props, set] = useSprings(emailPreviewCards.length, i => {
+    console.log("from", cardSpringDataFrom());
+    console.log("to", cardSpringDataTo(emailPreviewCards.length, i));
+
+    return {
+      from: cardSpringDataFrom(),
+      ...cardSpringDataTo(emailPreviewCards.length, i)
+    };
+  }); // Create a bunch of springs using the helpers above
 
   // Create a gesture, we're interested in down-state, delta (current-pos - click-pos), direction and velocity
   const gesture = useGesture(
@@ -124,7 +122,7 @@ function ZStackCardsView() {
         gone.add(index); // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out
 
         if (index > -1) {
-          cards.splice(index, 1);
+          emailPreviewCards.splice(index, 1);
         }
       }
 
@@ -140,7 +138,7 @@ function ZStackCardsView() {
           ? window.innerHeight
           : down
           ? yDelta
-          : (cards.length - 1 - i) * -18;
+          : (emailPreviewCards.length - 1 - i) * -18;
         const rot = isGone
           ? xDelta / 40 + dir * 10 * velocity
           : down
@@ -157,14 +155,14 @@ function ZStackCardsView() {
           y,
           rot,
           scale,
-          delay: undefined,
           config: { friction: 50, tension: down ? 800 : isGone ? 200 : 500 }
         };
       });
 
       if (last && !down) {
         set(i => {
-          if (i < cards.length) return to(i);
+          if (i < emailPreviewCards.length)
+            return cardSpringDataTo(emailPreviewCards.length, i);
         });
       }
 
@@ -195,7 +193,7 @@ function ZStackCardsView() {
         {...gesture(i)}
         style={{
           transform: interpolate([rot, scale], transform),
-          backgroundImage: `url(${cards[i]})`
+          backgroundImage: `url(${emailPreviewCards[i]})`
         }}
         onTouchMove={handleAdditionalActionsOnTouchOver}
         onTouchEnd={handleTouchEnd}

@@ -15,6 +15,20 @@ const theme = createMuiTheme({
 
 function App() {
   const initialState = {
+    emailPreviewCards: ["", "", "", ""],
+    cardSpringDataFrom: () => ({
+      x: 0,
+      y: window.outerHeight,
+      rot: 0,
+      scale: 1
+    }),
+    cardSpringDataTo: (count, i) => ({
+      x: 0,
+      y: (count - 1 - i) * -18,
+      scale: 1,
+      rot: 0,
+      delay: i * 100
+    }),
     touchState: { overInbox: false, overReminder: false }
   };
 
@@ -23,6 +37,8 @@ function App() {
       case "movePointerOverInbox":
         return {
           ...state,
+          cardSpringDataFrom: state.cardSpringDataTo,
+          cardSpringDataTo: state.cardSpringDataTo,
           touchState: { overInbox: true, overReminder: false }
         };
       case "movePointerOverReminder":
@@ -37,7 +53,7 @@ function App() {
         };
 
       default:
-        return state;
+        throw new Error("Unexpected action!");
     }
   };
 
