@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { StateProvider } from "./state";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
@@ -41,8 +41,6 @@ function App() {
     }
   };
 
-  const zStackCardsView = useMemo(() => <ZStackCardsView />, []);
-
   return (
     <StateProvider reducer={reducer} initialState={initialState}>
       <ThemeProvider theme={theme}>
@@ -51,7 +49,7 @@ function App() {
             <AppBar />
           </div>
 
-          {zStackCardsView}
+          <ZStackCardsView />
 
           <div className="footer">
             <ActionBar />
