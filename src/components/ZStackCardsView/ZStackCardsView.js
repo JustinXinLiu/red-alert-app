@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./ZStackCardsView.css";
 import { useSprings, animated, interpolate } from "react-spring";
 import { useGesture } from "react-use-gesture";
 import { useStateValue } from "../../state";
+
+console.log("render ZStackCardsView");
 
 const cards = ["", "", "", ""];
 // const originalSize = cards.length;
@@ -53,7 +55,6 @@ function ZStackCardsView() {
           case "inbox":
             if (!_inboxEnter) {
               _inboxEnter = true;
-              console.log("_inboxEnter", _inboxEnter);
 
               _timeout = setTimeout(() => {
                 dispatch({ type: "movePointerOverInbox" });
@@ -64,7 +65,6 @@ function ZStackCardsView() {
           case "reminder":
             if (!_reminderEnter) {
               _reminderEnter = true;
-              console.log("_reminderEnter", _reminderEnter);
 
               _timeout = setTimeout(() => {
                 dispatch({ type: "movePointerOverReminder" });
@@ -75,24 +75,23 @@ function ZStackCardsView() {
           default:
         }
       } else {
-        _inboxEnter = false;
-        _reminderEnter = false;
-
-        if (_timeout) {
-          console.log("clear timeout", _timeout);
-          clearTimeout(_timeout);
-          _timeout = null;
-        }
-
-        if (touchState.overInbox || touchState.overReminder)
-          dispatch({ type: "movePointerOut" });
+        handleTouchEnd();
       }
     }
   };
 
   const handleTouchEnd = () => {
-    if (touchState.overInbox || touchState.overReminder)
+    if (_timeout) {
+      console.log("clear timeout", _timeout);
+      clearTimeout(_timeout);
+      _timeout = null;
+    }
+
+    if (_inboxEnter || _reminderEnter) {
+      _inboxEnter = false;
+      _reminderEnter = false;
       dispatch({ type: "movePointerOut" });
+    }
   };
 
   // This is just helpers, they curate spring data, values that are later being interpolated into css
@@ -108,6 +107,7 @@ function ZStackCardsView() {
     ...to(i),
     from: from(i)
   })); // Create a bunch of springs using the helpers above
+
   // Create a gesture, we're interested in down-state, delta (current-pos - click-pos), direction and velocity
   const bind = useGesture(
     ({
@@ -150,6 +150,8 @@ function ZStackCardsView() {
 
         // console.log("yDir", yDir);
 
+        // console.log("offset y", y);
+
         return {
           x,
           y,
@@ -170,6 +172,12 @@ function ZStackCardsView() {
       //   setTimeout(() => gone.clear() || set(i => to(i)), 600);
     }
   );
+
+  // useEffect(() => {
+  //   console.log("render ZStackCardsView");
+  //   // console.log("render ZStackCardsView", touchState);
+  // }, []);
+
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
   return props.map(({ x, y, rot, scale }, i) => (
     <animated.div
@@ -192,6 +200,7 @@ function ZStackCardsView() {
         }}
         onTouchMove={handleAdditionalActionsOnTouchOver}
         onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
       />
     </animated.div>
   ));
