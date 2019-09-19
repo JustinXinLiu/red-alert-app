@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./ZStackCardsView.css";
-import { useSprings, animated, interpolate } from "react-spring";
+import { useSprings, animated, to } from "react-spring";
 import { useGesture } from "react-use-gesture";
 import { useStateValue } from "../../state";
 
@@ -183,7 +183,7 @@ function ZStackCardsView() {
       className="card-wrapper"
       key={i}
       style={{
-        transform: interpolate(
+        transform: to(
           [x, y],
           (x, y) => `perspective(100px) translate3d(${x}px, ${y}px, ${4 * i}px)`
         )
@@ -194,7 +194,7 @@ function ZStackCardsView() {
         className="card"
         {...gesture(i)}
         style={{
-          transform: interpolate([rot, scale], transform),
+          transform: to([rot, scale], transform),
           backgroundImage: `url(${emailPreviewCards[i]})`
         }}
         onTouchMove={handleAdditionalActionsOnTouchOver}
