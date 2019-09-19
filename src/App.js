@@ -37,13 +37,13 @@ function App() {
       case "movePointerOverInbox":
         return {
           ...state,
-          cardSpringDataFrom: state.cardSpringDataTo,
-          cardSpringDataTo: state.cardSpringDataTo,
+          cardSpringDataFrom: () => undefined,
           touchState: { overInbox: true, overReminder: false }
         };
       case "movePointerOverReminder":
         return {
           ...state,
+          cardSpringDataFrom: () => undefined,
           touchState: { overInbox: false, overReminder: true }
         };
       case "movePointerOut":

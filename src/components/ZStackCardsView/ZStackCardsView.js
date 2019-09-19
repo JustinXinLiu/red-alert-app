@@ -6,7 +6,7 @@ import { useStateValue } from "../../state";
 
 // This is being used down there in the view, it interpolates rotation and scale into a css transform
 const transform = (r, s) =>
-  `perspective(1500px) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
+  `rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
 
 let _inboxEnter, _reminderEnter, _timeout;
 
@@ -94,8 +94,6 @@ function ZStackCardsView() {
     }
   };
 
-  console.log("from", cardSpringDataFrom());
-
   const [props, set] = useSprings(emailPreviewCards.length, i => {
     console.log("from", cardSpringDataFrom());
     console.log("to", cardSpringDataTo(emailPreviewCards.length, i));
@@ -118,6 +116,7 @@ function ZStackCardsView() {
     }) => {
       const trigger = velocity > 0.2; // If you flick hard enough it should trigger the card to fly out
       const dir = xDir < 0 ? -1 : 1; // Direction should either point left or right
+
       if (!down && trigger && yDir >= 0) {
         gone.add(index); // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out
 
@@ -128,6 +127,7 @@ function ZStackCardsView() {
 
       set(i => {
         if (index !== i) return; // We're only interested in changing spring-data for the current spring
+
         const isGone = gone.has(index);
 
         // console.log("isGone", isGone);
@@ -147,7 +147,6 @@ function ZStackCardsView() {
         const scale = down ? 1.1 : 1; // Active cards lift up a bit
 
         // console.log("yDir", yDir);
-
         // console.log("offset y", y);
 
         return {
@@ -171,9 +170,9 @@ function ZStackCardsView() {
     }
   );
 
-  useEffect(() => {
-    console.log("render ZStackCardsView");
-  }, []);
+  // useEffect(() => {
+  //   console.log("render ZStackCardsView");
+  // }, []);
 
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
   return props.map(({ x, y, rot, scale }, i) => (
