@@ -34,19 +34,19 @@ function App() {
 
   const reducer = (state, action) => {
     switch (action.type) {
-      case "movePointerOverInbox":
+      case "showInboxActions":
         return {
           ...state,
           cardSpringDataFrom: () => undefined,
           touchState: { overInbox: true, overReminder: false }
         };
-      case "movePointerOverReminder":
+      case "showReminderActions":
         return {
           ...state,
           cardSpringDataFrom: () => undefined,
           touchState: { overInbox: false, overReminder: true }
         };
-      case "movePointerOut":
+      case "hideActions":
         return {
           ...state,
           touchState: { overInbox: false, overReminder: false }

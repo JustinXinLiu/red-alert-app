@@ -57,8 +57,8 @@ function ZStackCardsView() {
               _inboxEnter = true;
 
               _timeout = setTimeout(() => {
-                dispatch({ type: "movePointerOverInbox" });
-                console.log("set inbox over");
+                dispatch({ type: "showInboxActions" });
+                console.log("show Inbox actions");
               }, 600);
             }
             break;
@@ -67,8 +67,8 @@ function ZStackCardsView() {
               _reminderEnter = true;
 
               _timeout = setTimeout(() => {
-                dispatch({ type: "movePointerOverReminder" });
-                console.log("set reminder over");
+                dispatch({ type: "showReminderActions" });
+                console.log("show Reminder actions");
               }, 600);
             }
             break;
@@ -90,7 +90,10 @@ function ZStackCardsView() {
     if (_inboxEnter || _reminderEnter) {
       _inboxEnter = false;
       _reminderEnter = false;
-      dispatch({ type: "movePointerOut" });
+      console.log("hide actions");
+
+      if (touchState.overInbox || touchState.overReminder)
+        dispatch({ type: "hideActions" });
     }
   };
 
@@ -170,9 +173,9 @@ function ZStackCardsView() {
     }
   );
 
-  // useEffect(() => {
-  //   console.log("render ZStackCardsView");
-  // }, []);
+  useEffect(() => {
+    console.log("render ZStackCardsView");
+  }, []);
 
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
   return props.map(({ x, y, rot, scale }, i) => (
