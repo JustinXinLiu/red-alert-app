@@ -14,11 +14,15 @@ function ZStackCardsView() {
   console.log("ZStackCardsView function called...");
 
   const [
-    { emailPreviewCards, cardSpringDataFrom, cardSpringDataTo, touchState },
+    {
+      maxDisplaySize,
+      emailPreviewCards,
+      cardSpringDataFrom,
+      cardSpringDataTo,
+      touchState
+    },
     dispatch
   ] = useStateValue();
-
-  // const originalSize = emailPreviewCards.length;
 
   const [gone] = useState(() => new Set()); // The set flags all the cards that are flicked out
 
@@ -97,9 +101,9 @@ function ZStackCardsView() {
     }
   };
 
-  const [props, set] = useSprings(emailPreviewCards.length, i => {
+  const [props, set] = useSprings(maxDisplaySize - 1, i => {
     console.log("from", cardSpringDataFrom());
-    console.log("to", cardSpringDataTo(emailPreviewCards.length, i));
+    // console.log("to", cardSpringDataTo(emailPreviewCards.length, i));
 
     return {
       from: cardSpringDataFrom(),

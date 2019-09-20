@@ -15,6 +15,7 @@ const theme = createMuiTheme({
 
 function App() {
   const initialState = {
+    maxDisplaySize: 5,
     emailPreviewCards: ["", "", "", ""],
     cardSpringDataFrom: () => ({
       x: 0,
@@ -37,13 +38,11 @@ function App() {
       case "showInboxActions":
         return {
           ...state,
-          cardSpringDataFrom: () => undefined,
           touchState: { overInbox: true, overReminder: false }
         };
       case "showReminderActions":
         return {
           ...state,
-          cardSpringDataFrom: () => undefined,
           touchState: { overInbox: false, overReminder: true }
         };
       case "hideActions":
