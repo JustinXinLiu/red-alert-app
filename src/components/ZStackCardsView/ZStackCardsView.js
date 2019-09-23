@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "./ZStackCardsView.css";
 import { useSprings, animated, to } from "react-spring";
 import { useGesture } from "react-use-gesture";
 import { useStateValue } from "../../state";
 
-// This is being used down there in the view, it interpolates rotation and scale into a css transform
+// This is being used down there in the view, it interpolates rotation and scale into a css transform.
 const transform = (r, s) =>
   `rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
 
@@ -17,14 +17,13 @@ function ZStackCardsView() {
     {
       maxDisplaySize,
       emailPreviewCards,
+      removedEmailPreviewCards,
       cardSpringDataFrom,
       cardSpringDataTo,
       touchState
     },
     dispatch
   ] = useStateValue();
-
-  const [gone] = useState(() => new Set()); // The set flags all the cards that are flicked out
 
   const handleAdditionalActionsOnTouchOver = e => {
     const touches = e.changedTouches;
@@ -101,31 +100,30 @@ function ZStackCardsView() {
     }
   };
 
-  const [props, set] = useSprings(maxDisplaySize - 1, i => {
-    console.log("from", cardSpringDataFrom());
-    // console.log("to", cardSpringDataTo(emailPreviewCards.length, i));
-
-    return {
-      from: cardSpringDataFrom(),
-      ...cardSpringDataTo(emailPreviewCards.length, i)
-    };
-  }); // Create a bunch of springs using the helpers above
+  // Create a bunch of springs for later bound to each card.
+  const [props, set] = useSprings(maxDisplaySize - 1, i => ({
+    from: cardSpringDataFrom(),
+    ...cardSpringDataTo(emailPreviewCards.length, i)
+  }));
 
   // Create a gesture, we're interested in down-state, delta (current-pos - click-pos), direction and velocity
   const gesture = useGesture(
     ({
       args: [index],
       down,
-      delta: [xDelta, yDelta],
-      direction: [xDir, yDir],
+      delta: [deltaX, deltaY],
+      direction: [directionX, directionY],
       velocity,
       last
     }) => {
-      const trigger = velocity > 0.2; // If you flick hard enough it should trigger the card to fly out
-      const dir = xDir < 0 ? -1 : 1; // Direction should either point left or right
+      // If you flick hard enough it should trigger the card to fly out.
+      const trigger = velocity > 0.2;
+      // Direction should either point left or right.
+      const dir = directionX < 0 ? -1 : 1;
 
-      if (!down && trigger && yDir >= 0) {
-        gone.add(index); // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out
+      if (!down && trigger && directionY >= 0) {
+        // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out.
+        removedEmailPreviewCards.add(index);
 
         if (index > -1) {
           emailPreviewCards.splice(index, 1);
@@ -133,35 +131,35 @@ function ZStackCardsView() {
       }
 
       set(i => {
-        if (index !== i) return; // We're only interested in changing spring-data for the current spring
+        // We're only interested in changing spring-data for the current spring.
+        if (index !== i) return;
 
-        const isGone = gone.has(index);
+        const removed = removedEmailPreviewCards.has(index);
 
-        // console.log("isGone", isGone);
-        // console.log("down", down);
-
-        const x = isGone ? (window.innerWidth / 2) * dir : down ? xDelta : 0; // When a card is gone it flys out left or right, otherwise goes back to zero
-        const y = isGone
+        // When a card is removed it flys out left or right, otherwise goes back to zero.
+        const x = removed ? (window.innerWidth / 2) * dir : down ? deltaX : 0;
+        const y = removed
           ? window.innerHeight
           : down
-          ? yDelta
+          ? deltaY
           : (emailPreviewCards.length - 1 - i) * -18;
-        const rot = isGone
-          ? xDelta / 40 + dir * 10 * velocity
+        const rotation = removed
+          ? deltaX / 40 + dir * 10 * velocity
           : down
-          ? xDelta / 40
-          : 0; // How much the card tilts, flicking it harder makes it rotate faster
-        const scale = down ? 1.1 : 1; // Active cards lift up a bit
+          ? deltaX / 40
+          : 0; // How much the card tilts, flicking it harder makes it rotate faster.
+        // Active cards lift up a bit.
+        const scale = down ? 1.1 : 1;
 
-        // console.log("yDir", yDir);
+        // console.log("directionY", directionY);
         // console.log("offset y", y);
 
         return {
           x,
           y,
-          rot,
+          rotation,
           scale,
-          config: { friction: 50, tension: down ? 800 : isGone ? 200 : 500 }
+          config: { friction: 50, tension: down ? 800 : removed ? 200 : 500 }
         };
       });
 
@@ -182,7 +180,7 @@ function ZStackCardsView() {
   }, []);
 
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
-  return props.map(({ x, y, rot, scale }, i) => (
+  return props.map(({ x, y, rotation, scale }, i) => (
     <animated.div
       className="card-wrapper"
       key={i}
@@ -193,12 +191,12 @@ function ZStackCardsView() {
         )
       }}
     >
-      {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which) */}
+      {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which). */}
       <animated.div
         className="card"
         {...gesture(i)}
         style={{
-          transform: to([rot, scale], transform),
+          transform: to([rotation, scale], transform),
           backgroundImage: `url(${emailPreviewCards[i]})`
         }}
         onTouchMove={handleAdditionalActionsOnTouchOver}

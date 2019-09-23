@@ -17,17 +17,18 @@ function App() {
   const initialState = {
     maxDisplaySize: 5,
     emailPreviewCards: ["", "", "", ""],
+    removedEmailPreviewCards: new Set(),
     cardSpringDataFrom: () => ({
       x: 0,
       y: window.outerHeight,
-      rot: 0,
+      rotation: 0,
       scale: 1
     }),
     cardSpringDataTo: (count, i) => ({
       x: 0,
       y: (count - 1 - i) * -18,
       scale: 1,
-      rot: 0,
+      rotation: 0,
       delay: i * 100
     }),
     touchState: { overInbox: false, overReminder: false }
