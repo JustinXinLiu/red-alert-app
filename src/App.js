@@ -10,6 +10,10 @@ const theme = createMuiTheme({
     primary: { 500: "#fccb1e" },
     // theme.palette.action.active
     action: { active: "rgba(3,2,1,0.2)" }
+  },
+  // shadows: ["none"],
+  MuiButtonBase: {
+    disableRipple: true
   }
 });
 
