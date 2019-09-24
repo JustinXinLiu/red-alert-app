@@ -1,0 +1,36 @@
+@import "../../styles/variables.scss";
+
+.CircleMenu {
+  display: flex;
+  justify-content: space-around;
+  margin: 0 24px;
+}
+
+svg {
+  transition: all 0.3s ease-out;
+}
+
+button {
+  transition: all 1s;
+
+  &.circle {
+    border-radius: 50%;
+    z-index: 1050;
+
+    &.main {
+      width: 56px;
+      height: 56px;
+      background-color: transparent;
+      pointer-events: auto;
+    }
+
+    &:active {
+      background-color: $gray-1;
+    }
+
+    svg:active {
+      fill: white;
+      transform: scale(1.1);
+    }
+  }
+}

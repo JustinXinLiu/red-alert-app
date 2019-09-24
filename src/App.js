@@ -2,7 +2,7 @@ import React from "react";
 import { StateProvider } from "./state";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
-import "./App.css";
+import "./App.scss";
 import { AppBar, ActionBar, ZStackCardsView, CircleMenu } from "./components";
 
 const theme = createMuiTheme({
