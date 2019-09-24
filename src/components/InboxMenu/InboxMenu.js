@@ -18,7 +18,7 @@ function InboxMenu(props) {
         </svg>
       </button>
 
-      <button className={`circle-button popup`}>
+      <button id="archive" className={`circle-button popup`}>
         <svg
           width="21"
           height="15"
@@ -30,7 +30,7 @@ function InboxMenu(props) {
         </svg>
       </button>
 
-      <button className={`circle-button popup`}>
+      <button id="ignore" className={`circle-button popup`}>
         <svg
           width="21"
           height="15"
