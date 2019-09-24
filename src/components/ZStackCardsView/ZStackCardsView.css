@@ -1,0 +1,28 @@
+.card-wrapper {
+  position: absolute;
+  top: 6vh;
+  width: 100vw;
+  height: 100vh;
+  will-change: transform;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  background-color: white;
+  width: 34vh;
+  height: 44vh;
+  box-shadow: 0px 12px 24px 0 rgba(0, 0, 0, 0.025);
+  transition: box-shadow 0.4s;
+  will-change: transform;
+  touch-action: none;
+}
+
+.card:hover {
+  box-shadow: 0px 12px 40px 4px rgba(0, 0, 0, 0.06);
+}
+
+.card:active {
+  box-shadow: 0px 12px 40px 4px rgba(0, 0, 0, 0.1);
+}

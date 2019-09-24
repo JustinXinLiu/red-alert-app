@@ -3,7 +3,7 @@ import { StateProvider } from "./state";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import "./App.css";
-import { AppBar, ActionBar, ZStackCardsView } from "./components";
+import { AppBar, ActionBar, ZStackCardsView, CircleMenu } from "./components";
 
 const theme = createMuiTheme({
   palette: {
@@ -73,6 +73,7 @@ function App() {
 
           <div className="footer">
             <ActionBar />
+            <CircleMenu />
           </div>
         </div>
       </ThemeProvider>

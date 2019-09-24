@@ -1,0 +1,17 @@
+.CircleMenu {
+  display: flex;
+  justify-content: space-around;
+  margin: 0 24px;
+}
+
+button.circle {
+  border-radius: 50%;
+  z-index: 1050;
+}
+
+button.circle.main {
+  width: 56px;
+  height: 56px;
+  background-color: transparent;
+  pointer-events: auto;
+}
