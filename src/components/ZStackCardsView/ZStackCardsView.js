@@ -9,6 +9,7 @@ const transform = (r, s) =>
   `rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
 
 let _inboxEnter, _reminderEnter, _timeout;
+let _currentPopupButton;
 
 function ZStackCardsView() {
   console.log("ZStackCardsView function called...");
@@ -34,14 +35,26 @@ function ZStackCardsView() {
       const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
       // console.log("Touch over elements", elements.map(el => el.className));
 
-      const connectedAction = elements.find(el =>
-        el.classList.contains("MuiFab-sizeSmall")
-      );
+      if (touchState.overInbox || touchState.overReminder) {
+        const popupButton = elements.find(el => el.classList.contains("popup"));
+        if (popupButton) {
+          _currentPopupButton = popupButton;
 
-      if (connectedAction) {
-        if (connectedAction.title === "Delete") {
-          console.log("connectedAction", connectedAction);
-          connectedAction.classList.toggle("active");
+          _currentPopupButton.classList.add("touchover");
+          _currentPopupButton.firstChild.classList.add("touchover");
+          switch (popupButton.id) {
+            case "archive":
+              break;
+            case "ignore":
+              break;
+            case "hour1":
+              break;
+            case "hour2":
+              break;
+            default:
+          }
+        } else {
+          ResetPopupButtonTouchOverState();
         }
       }
 
@@ -97,6 +110,15 @@ function ZStackCardsView() {
 
       if (touchState.overInbox || touchState.overReminder)
         dispatch({ type: "hideActions" });
+    }
+
+    ResetPopupButtonTouchOverState();
+  };
+
+  const ResetPopupButtonTouchOverState = () => {
+    if (_currentPopupButton) {
+      _currentPopupButton.classList.remove("touchover");
+      _currentPopupButton.firstChild.classList.remove("touchover");
     }
   };
 

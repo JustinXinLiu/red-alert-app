@@ -10,7 +10,6 @@ button {
   &.circle-button {
     background-color: transparent;
     border-radius: 50%;
-    opacity: 0.8;
 
     &.main {
       width: 56px;
@@ -28,12 +27,11 @@ button {
       z-index: 1000;
     }
 
-    &:active {
+    &.touchover {
       background-color: $gray-1;
-      opacity: 1;
     }
 
-    svg:active {
+    svg.touchover {
       fill: white;
       transform: scale(1.1);
     }
