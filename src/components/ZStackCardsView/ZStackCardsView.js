@@ -32,7 +32,7 @@ function ZStackCardsView() {
     if (touches && touches.length > 0) {
       const touch = touches[0];
       const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
-      //console.log("Touch over elements", elements.map(el => el.className));
+      // console.log("Touch over elements", elements.map(el => el.className));
 
       const connectedAction = elements.find(el =>
         el.classList.contains("MuiFab-sizeSmall")
@@ -48,13 +48,13 @@ function ZStackCardsView() {
       const dial = elements.find(el =>
         el.classList.contains(
           touchState.overInbox || touchState.overReminder
-            ? "MuiSpeedDial-root"
-            : "MuiButtonBase-root"
+            ? "circle-menu"
+            : "circle-button"
         )
       );
 
       if (dial) {
-        switch (dial.parentElement.id) {
+        switch (dial.id) {
           case "inbox":
             if (!_inboxEnter) {
               _inboxEnter = true;
@@ -62,7 +62,7 @@ function ZStackCardsView() {
               _timeout = setTimeout(() => {
                 dispatch({ type: "showInboxActions" });
                 console.log("show Inbox actions");
-              }, 600);
+              }, 800);
             }
             break;
           case "reminder":
@@ -72,7 +72,7 @@ function ZStackCardsView() {
               _timeout = setTimeout(() => {
                 dispatch({ type: "showReminderActions" });
                 console.log("show Reminder actions");
-              }, 600);
+              }, 800);
             }
             break;
           default:

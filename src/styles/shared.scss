@@ -5,26 +5,68 @@ svg {
 }
 
 button {
-  transition: all 1s;
+  transition: all 0.6s;
 
-  &.circle {
+  &.circle-button {
+    background-color: transparent;
     border-radius: 50%;
-    z-index: 1050;
+    opacity: 0.8;
 
     &.main {
       width: 56px;
       height: 56px;
-      background-color: transparent;
       pointer-events: auto;
+      z-index: 1050;
+    }
+
+    &.popup {
+      width: 48px;
+      height: 48px;
+      margin: 8px 4px;
+      border: 2px solid $gray-1;
+      opacity: 0;
+      z-index: 1000;
     }
 
     &:active {
       background-color: $gray-1;
+      opacity: 1;
     }
 
     svg:active {
       fill: white;
       transform: scale(1.1);
     }
+  }
+}
+
+.circle-menu {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+
+  button:nth-of-type(2) {
+    transform: translate(0, 12px);
+  }
+
+  button:nth-of-type(3) {
+    transform: translate(0, 12px);
+    transition-delay: 75ms;
+  }
+
+  &.activated {
+    pointer-events: auto;
+  }
+
+  &.activated button:nth-of-type(2) {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(0, 0);
+  }
+
+  &.activated button:nth-of-type(3) {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(0, 0);
   }
 }

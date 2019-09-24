@@ -3,8 +3,8 @@ import "./ReminderMenu.scss";
 
 function ReminderMenu(props) {
   return (
-    <div className="ReminderMenu">
-      <button className={`circle main`}>
+    <div className="circle-menu">
+      <button className={`circle-button main`}>
         <svg
           width="28"
           height="28"
