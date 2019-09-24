@@ -1,5 +1,14 @@
 @import "./variables.scss";
 
+@mixin active-bg {
+  background-color: $gray-1;
+}
+
+@mixin active-fg {
+  fill: white;
+  transform: scale(1.1);
+}
+
 svg {
   transition: all 0.3s ease-out;
 }
@@ -28,12 +37,19 @@ button {
     }
 
     &.touchover {
-      background-color: $gray-1;
+      @include active-bg();
+    }
+
+    &:active {
+      @include active-bg();
     }
 
     svg.touchover {
-      fill: white;
-      transform: scale(1.1);
+      @include active-fg();
+    }
+
+    svg:active {
+      @include active-fg();
     }
   }
 }

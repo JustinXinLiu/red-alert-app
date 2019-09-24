@@ -12,7 +12,7 @@ let _inboxEnter, _reminderEnter, _timeout;
 let _currentPopupButton;
 
 function ZStackCardsView() {
-  console.log("ZStackCardsView function called...");
+  // console.log("ZStackCardsView function called...");
 
   const [
     {
@@ -98,7 +98,7 @@ function ZStackCardsView() {
 
   const handleTouchEnd = () => {
     if (_timeout) {
-      console.log("clear timeout", _timeout);
+      // console.log("clear timeout", _timeout);
       clearTimeout(_timeout);
       _timeout = null;
     }
@@ -198,7 +198,7 @@ function ZStackCardsView() {
   );
 
   useEffect(() => {
-    console.log("render ZStackCardsView");
+    // console.log("render ZStackCardsView");
   }, []);
 
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
