@@ -1,6 +1,15 @@
 import AppBar from "./AppBar";
-import ActionBar from "./ActionBar";
+import ActionBar1 from "./ActionBar1";
 import ZStackCardsView from "./ZStackCardsView";
-import CircleMenu from "./CircleMenu";
+import ActionBar from "./ActionBar";
+import InboxMenu from "./InboxMenu";
+import ReminderMenu from "./ReminderMenu";
 
-export { AppBar, ActionBar, ZStackCardsView, CircleMenu };
+export {
+  AppBar,
+  InboxMenu,
+  ReminderMenu,
+  ActionBar,
+  ActionBar1,
+  ZStackCardsView
+};

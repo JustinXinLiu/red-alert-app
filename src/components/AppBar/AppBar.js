@@ -1,5 +1,5 @@
 import React from "react";
-import "./AppBar.css";
+import "./AppBar.scss";
 import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import SvgIcon from "@material-ui/core/SvgIcon";
