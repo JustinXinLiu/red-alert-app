@@ -35,7 +35,8 @@ function App() {
       rotation: 0,
       delay: i * 100
     }),
-    touchState: { overInbox: false, overReminder: false }
+    touchState: { overInbox: false, overReminder: false },
+    testBool: false
   };
 
   const reducer = (state, action) => {
@@ -54,6 +55,12 @@ function App() {
         return {
           ...state,
           touchState: { overInbox: false, overReminder: false }
+        };
+      case "archiveEmail":
+        console.log("archive email");
+        return {
+          ...state,
+          testBool: true
         };
 
       default:

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./ZStackCardsView.css";
 import { useSprings, animated, to } from "react-spring";
-import { useGesture } from "react-use-gesture";
+import { useDrag } from "react-use-gesture";
 import { useStateValue } from "../../state";
 
 // This is being used down there in the view, it interpolates rotation and scale into a css transform.
@@ -10,6 +10,7 @@ const transform = (r, s) =>
 
 let _inboxEnter, _reminderEnter, _timeout;
 let _currentPopupButton, _selectedAction;
+let _localBool = false;
 
 function ZStackCardsView() {
   // console.log("ZStackCardsView function called...");
@@ -21,10 +22,14 @@ function ZStackCardsView() {
       removedEmailPreviewCards,
       cardSpringDataFrom,
       cardSpringDataTo,
-      touchState
+      touchState,
+      testBool
     },
     dispatch
   ] = useStateValue();
+
+  console.log("testBool", testBool);
+  _localBool = testBool;
 
   const handleAdditionalActionsOnTouchOver = e => {
     const touches = e.changedTouches;
@@ -42,24 +47,7 @@ function ZStackCardsView() {
 
           _currentPopupButton.classList.add("touchover");
           _currentPopupButton.firstChild.classList.add("touchover");
-          switch (popupButton.id) {
-            case "archive":
-              _selectedAction = "archive";
-              break;
-            case "ignore":
-              _selectedAction = "ignore";
-              break;
-            case "reminderTime1":
-              _selectedAction = "reminderTime1";
-              break;
-            case "reminderTime2":
-              _selectedAction = "reminderTime2";
-              break;
-            case "reminderTime3":
-              _selectedAction = "reminderTime3";
-              break;
-            default:
-          }
+          _selectedAction = popupButton.id;
         } else {
           ResetPopupButtonTouchOverState();
         }
@@ -118,6 +106,25 @@ function ZStackCardsView() {
       if (touchState.overInbox || touchState.overReminder) {
         if (!cancelled && _selectedAction) {
           console.log("_selectedAction", _selectedAction);
+
+          switch (_selectedAction) {
+            case "archive":
+              dispatch({ type: "archiveEmail" });
+              break;
+            case "ignore":
+              dispatch({ type: "archiveEmail" });
+              break;
+            case "reminderTime1":
+              dispatch({ type: "archiveEmail" });
+              break;
+            case "reminderTime2":
+              dispatch({ type: "archiveEmail" });
+              break;
+            case "reminderTime3":
+              dispatch({ type: "archiveEmail" });
+              break;
+            default:
+          }
         }
 
         dispatch({ type: "hideActions" });
@@ -147,21 +154,25 @@ function ZStackCardsView() {
   }));
 
   // Create a gesture, we're interested in down-state, delta (current-pos - click-pos), direction and velocity
-  const gesture = useGesture(
+  const gesture = useDrag(
     ({
-      args: [index],
       down,
       delta: [deltaX, deltaY],
       direction: [directionX, directionY],
       velocity,
-      last
+      last,
+      args: [index]
     }) => {
       // If you flick hard enough it should trigger the card to fly out.
       const trigger = velocity > 0.2;
       // Direction should either point left or right.
-      const dir = directionX < 0 ? -1 : 1;
+      const direction = directionX < 0 ? -1 : 1;
 
-      if (!down && trigger && directionY >= 0) {
+      console.log("here?", testBool);
+      if (_localBool || (!down && trigger && directionY >= 0)) {
+        console.log("or here?", _localBool);
+        _localBool = false;
+
         // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out.
         removedEmailPreviewCards.add(index);
 
@@ -177,14 +188,18 @@ function ZStackCardsView() {
         const removed = removedEmailPreviewCards.has(index);
 
         // When a card is removed it flys out left or right, otherwise goes back to zero.
-        const x = removed ? (window.innerWidth / 2) * dir : down ? deltaX : 0;
+        const x = removed
+          ? (window.innerWidth / 2) * direction
+          : down
+          ? deltaX
+          : 0;
         const y = removed
           ? window.innerHeight
           : down
           ? deltaY
           : (emailPreviewCards.length - 1 - i) * -18;
         const rotation = removed
-          ? deltaX / 40 + dir * 10 * velocity
+          ? deltaX / 40 + direction * 10 * velocity
           : down
           ? deltaX / 40
           : 0; // How much the card tilts, flicking it harder makes it rotate faster.
