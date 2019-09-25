@@ -9,7 +9,7 @@ const transform = (r, s) =>
   `rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
 
 let _inboxEnter, _reminderEnter, _timeout;
-let _currentPopupButton;
+let _currentPopupButton, _selectedAction;
 
 function ZStackCardsView() {
   // console.log("ZStackCardsView function called...");
@@ -44,12 +44,19 @@ function ZStackCardsView() {
           _currentPopupButton.firstChild.classList.add("touchover");
           switch (popupButton.id) {
             case "archive":
+              _selectedAction = "archive";
               break;
             case "ignore":
+              _selectedAction = "ignore";
               break;
-            case "hour1":
+            case "reminderTime1":
+              _selectedAction = "reminderTime1";
               break;
-            case "hour2":
+            case "reminderTime2":
+              _selectedAction = "reminderTime2";
+              break;
+            case "reminderTime3":
+              _selectedAction = "reminderTime3";
               break;
             default:
           }
@@ -91,12 +98,12 @@ function ZStackCardsView() {
           default:
         }
       } else {
-        handleTouchEnd();
+        releaseTouch();
       }
     }
   };
 
-  const handleTouchEnd = () => {
+  const releaseTouch = (cancelled = false) => {
     if (_timeout) {
       // console.log("clear timeout", _timeout);
       clearTimeout(_timeout);
@@ -108,18 +115,29 @@ function ZStackCardsView() {
       _reminderEnter = false;
       console.log("hide actions");
 
-      if (touchState.overInbox || touchState.overReminder)
+      if (touchState.overInbox || touchState.overReminder) {
+        if (!cancelled && _selectedAction) {
+          console.log("_selectedAction", _selectedAction);
+        }
+
         dispatch({ type: "hideActions" });
+      }
     }
 
     ResetPopupButtonTouchOverState();
   };
+
+  const handleTouchEnd = () => releaseTouch();
+
+  const handleTouchCancel = () => releaseTouch(true);
 
   const ResetPopupButtonTouchOverState = () => {
     if (_currentPopupButton) {
       _currentPopupButton.classList.remove("touchover");
       _currentPopupButton.firstChild.classList.remove("touchover");
     }
+
+    _selectedAction = undefined;
   };
 
   // Create a bunch of springs for later bound to each card.
@@ -223,7 +241,7 @@ function ZStackCardsView() {
         }}
         onTouchMove={handleAdditionalActionsOnTouchOver}
         onTouchEnd={handleTouchEnd}
-        onTouchCancel={handleTouchEnd}
+        onTouchCancel={handleTouchCancel}
       />
     </animated.div>
   ));
