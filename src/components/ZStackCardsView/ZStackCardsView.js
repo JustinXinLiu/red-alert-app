@@ -10,7 +10,7 @@ const transform = (r, s) =>
 
 let _inboxEnter, _reminderEnter, _timeout;
 let _currentPopupButton, _selectedAction;
-let _localBool = false;
+let _flyoutToBottomRight = false;
 
 function ZStackCardsView() {
   // console.log("ZStackCardsView function called...");
@@ -22,14 +22,10 @@ function ZStackCardsView() {
       removedEmailPreviewCards,
       cardSpringDataFrom,
       cardSpringDataTo,
-      touchState,
-      testBool
+      touchState
     },
     dispatch
   ] = useStateValue();
-
-  console.log("testBool", testBool);
-  _localBool = testBool;
 
   const handleAdditionalActionsOnTouchOver = e => {
     const touches = e.changedTouches;
@@ -109,7 +105,8 @@ function ZStackCardsView() {
 
           switch (_selectedAction) {
             case "archive":
-              dispatch({ type: "archiveEmail" });
+              _flyoutToBottomRight = true;
+              // dispatch({ type: "archiveEmail" });
               break;
             case "ignore":
               dispatch({ type: "archiveEmail" });
@@ -168,10 +165,9 @@ function ZStackCardsView() {
       // Direction should either point left or right.
       const direction = directionX < 0 ? -1 : 1;
 
-      console.log("here?", testBool);
-      if (_localBool || (!down && trigger && directionY >= 0)) {
-        console.log("or here?", _localBool);
-        _localBool = false;
+      if (_flyoutToBottomRight || (!down && trigger && directionY >= 0)) {
+        console.log("or here?", _flyoutToBottomRight);
+        _flyoutToBottomRight = false;
 
         // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out.
         removedEmailPreviewCards.add(index);
