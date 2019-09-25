@@ -19,6 +19,7 @@ button {
   &.circle-button {
     background-color: transparent;
     border-radius: 50%;
+    opacity: 0.8;
 
     &.main {
       width: 56px;
@@ -68,19 +69,27 @@ button {
     transition-delay: 75ms;
   }
 
+  button:nth-of-type(4) {
+    transform: translate(0, 12px);
+    transition-delay: 150ms;
+  }
+
+  @for $i from 2 through 4 {
+    button:nth-of-type(#{$i}) {
+      transform: translate(0, 12px);
+      transition-delay: 75ms * (#{$i - 1});
+    }
+  }
+
   &.activated {
     pointer-events: auto;
   }
 
-  &.activated button:nth-of-type(2) {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translate(0, 0);
-  }
-
-  &.activated button:nth-of-type(3) {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translate(0, 0);
+  @for $i from 2 through 4 {
+    &.activated button:nth-of-type(#{$i}) {
+      opacity: 0.8;
+      transform: translate(0, 0);
+      pointer-events: auto;
+    }
   }
 }
