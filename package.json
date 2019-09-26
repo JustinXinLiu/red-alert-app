@@ -6,6 +6,8 @@
     "@material-ui/core": "^4.4.0",
     "@material-ui/icons": "^4.4.1",
     "@material-ui/lab": "^4.0.0-alpha.26",
+    "@microsoft/microsoft-graph-client": "^2.0.0",
+    "msal": "^1.1.3",
     "node-sass": "^4.12.0",
     "normalize.css": "^8.0.1",
     "react": "^16.9.0",
