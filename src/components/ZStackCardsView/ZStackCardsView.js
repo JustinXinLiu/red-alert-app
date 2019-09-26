@@ -110,6 +110,7 @@ function ZStackCardsView() {
               dispatch({ type: "archiveEmail" });
               break;
             case "ignore":
+              _flyoutToBottomRight = true;
               dispatch({ type: "ignoreEmail" });
               break;
             case "reminderTime1":
@@ -117,9 +118,11 @@ function ZStackCardsView() {
               dispatch({ type: "remindEmailInTime", payload: 1 });
               break;
             case "reminderTime2":
+              _flyoutToBottomLeft = true;
               dispatch({ type: "remindEmailInTime", payload: 3 });
               break;
             case "reminderTime3":
+              _flyoutToBottomLeft = true;
               dispatch({ type: "remindEmailInTime", paylaod: 24 });
               break;
             default:
@@ -162,15 +165,22 @@ function ZStackCardsView() {
       last,
       args: [index]
     }) => {
-      // If you flick hard enough it should trigger the card to fly out.
-      const trigger = velocity > 0.2;
-      // Direction should either point left or right.
-      const direction = directionX < 0 ? -1 : 1;
+      // When the volocity is greater than 0.2, we consider it's a flick and fly out the card.
+      const flick = velocity > 0.2;
+      // Determine which direction the card should fly out to.
+      let direction;
+      if (_flyoutToBottomLeft) {
+        direction = -1;
+      } else if (_flyoutToBottomRight) {
+        direction = 1;
+      } else {
+        direction = directionX < 0 ? -1 : 1;
+      }
 
       if (
         _flyoutToBottomLeft ||
         _flyoutToBottomRight ||
-        (!down && trigger && directionY >= 0)
+        (!down && flick && directionY >= 0)
       ) {
         _flyoutToBottomLeft = _flyoutToBottomRight = false;
 
