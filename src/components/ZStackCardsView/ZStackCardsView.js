@@ -10,7 +10,8 @@ const transform = (r, s) =>
 
 let _inboxEnter, _reminderEnter, _timeout;
 let _currentPopupButton, _selectedAction;
-let _flyoutToBottomRight = false;
+let _flyoutToBottomLeft = false,
+  _flyoutToBottomRight = false;
 
 function ZStackCardsView() {
   // console.log("ZStackCardsView function called...");
@@ -106,19 +107,20 @@ function ZStackCardsView() {
           switch (_selectedAction) {
             case "archive":
               _flyoutToBottomRight = true;
-              // dispatch({ type: "archiveEmail" });
+              dispatch({ type: "archiveEmail" });
               break;
             case "ignore":
-              dispatch({ type: "archiveEmail" });
+              dispatch({ type: "ignoreEmail" });
               break;
             case "reminderTime1":
-              dispatch({ type: "archiveEmail" });
+              _flyoutToBottomLeft = true;
+              dispatch({ type: "remindEmailInTime", payload: 1 });
               break;
             case "reminderTime2":
-              dispatch({ type: "archiveEmail" });
+              dispatch({ type: "remindEmailInTime", payload: 3 });
               break;
             case "reminderTime3":
-              dispatch({ type: "archiveEmail" });
+              dispatch({ type: "remindEmailInTime", paylaod: 24 });
               break;
             default:
           }
@@ -165,9 +167,12 @@ function ZStackCardsView() {
       // Direction should either point left or right.
       const direction = directionX < 0 ? -1 : 1;
 
-      if (_flyoutToBottomRight || (!down && trigger && directionY >= 0)) {
-        console.log("or here?", _flyoutToBottomRight);
-        _flyoutToBottomRight = false;
+      if (
+        _flyoutToBottomLeft ||
+        _flyoutToBottomRight ||
+        (!down && trigger && directionY >= 0)
+      ) {
+        _flyoutToBottomLeft = _flyoutToBottomRight = false;
 
         // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out.
         removedEmailPreviewCards.add(index);

@@ -59,6 +59,14 @@ function App() {
         return {
           ...state
         };
+      case "ignoreEmail":
+        return {
+          ...state
+        };
+      case "remindEmailInTime":
+        return {
+          ...state
+        };
 
       default:
         throw new Error("Unexpected action!");
