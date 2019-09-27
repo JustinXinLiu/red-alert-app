@@ -1,6 +1,6 @@
 import React from "react";
 import "./ReminderMenu.scss";
-import { useStateValue } from "../../state";
+import { useStateValue } from "../../Store";
 
 function ReminderMenu(props) {
   const [{ touchState }] = useStateValue();

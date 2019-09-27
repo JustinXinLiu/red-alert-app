@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./ZStackCardsView.css";
 import { useSprings, animated, to } from "react-spring";
 import { useDrag } from "react-use-gesture";
-import { useStateValue } from "../../state";
+import { useStateValue } from "../../Store";
 
 // This is being used down there in the view, it interpolates rotation and scale into a css transform.
 const transform = (r, s) =>
@@ -14,8 +14,6 @@ let _flyoutToBottomLeft = false,
   _flyoutToBottomRight = false;
 
 function ZStackCardsView() {
-  // console.log("ZStackCardsView function called...");
-
   const [
     {
       maxDisplaySize,
@@ -240,10 +238,6 @@ function ZStackCardsView() {
       //   setTimeout(() => gone.clear() || set(i => to(i)), 600);
     }
   );
-
-  useEffect(() => {
-    // console.log("render ZStackCardsView");
-  }, []);
 
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
   return props.map(({ x, y, rotation, scale }, i) => (

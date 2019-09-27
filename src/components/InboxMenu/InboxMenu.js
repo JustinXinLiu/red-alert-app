@@ -1,6 +1,6 @@
 import React from "react";
 import "./InboxMenu.scss";
-import { useStateValue } from "../../state";
+import { useStateValue } from "../../Store";
 
 function InboxMenu(props) {
   const [{ touchState }] = useStateValue();

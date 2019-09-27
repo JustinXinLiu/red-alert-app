@@ -1,9 +1,12 @@
-import React from "react";
-import { StateProvider } from "./state";
+import React, { useReducer, useEffect } from "react";
+import { StoreProvider, Reducer, InitialState } from "./Store";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import "./App.scss";
 import { AppBar, ActionBar, ZStackCardsView } from "./components";
+import config from "./Config";
+import { UserAgentApplication } from "msal";
+import { getUserDetails } from "./services/GraphService";
 
 const theme = createMuiTheme({
   palette: {
@@ -18,63 +21,123 @@ const theme = createMuiTheme({
 });
 
 function App() {
-  const initialState = {
-    maxDisplaySize: 5,
-    emailPreviewCards: ["", "", "", ""],
-    removedEmailPreviewCards: new Set(),
-    cardSpringDataFrom: () => ({
-      x: 0,
-      y: window.outerHeight,
-      rotation: 0,
-      scale: 1
-    }),
-    cardSpringDataTo: (count, i) => ({
-      x: 0,
-      y: (count - 1 - i) * -18,
-      scale: 1,
-      rotation: 0,
-      delay: i * 100
-    }),
-    touchState: { overInbox: false, overReminder: false }
-  };
+  const [state, dispatch] = useReducer(Reducer, InitialState);
 
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case "showInboxActions":
-        return {
-          ...state,
-          touchState: { overInbox: true, overReminder: false }
-        };
-      case "showReminderActions":
-        return {
-          ...state,
-          touchState: { overInbox: false, overReminder: true }
-        };
-      case "hideActions":
-        return {
-          ...state,
-          touchState: { overInbox: false, overReminder: false }
-        };
-      case "archiveEmail":
-        return {
-          ...state
-        };
-      case "ignoreEmail":
-        return {
-          ...state
-        };
-      case "remindEmailInTime":
-        return {
-          ...state
-        };
+  async function getUserProfile(userAgentApp) {
+    try {
+      // Get the access token silently
+      // If the cache contains a non-expired token, this function
+      // will just return the cached token. Otherwise, it will
+      // make a request to the Azure OAuth endpoint to get a token
 
-      default:
-        throw new Error("Unexpected action!");
+      const accessToken = await userAgentApp.acquireTokenSilent({
+        scopes: config.scopes
+      });
+
+      if (accessToken) {
+        // Get the user's profile from Graph
+        const user = await getUserDetails(accessToken);
+        console.log("user", user);
+
+        dispatch({
+          type: "getUserDetails",
+          payload: {
+            user: {
+              displayName: user.displayName,
+              email: user.mail || user.userPrincipalName
+            },
+            authenticated: true,
+            error: null
+          }
+        });
+      }
+    } catch (err) {
+      console.log(
+        `%c [FETCH ERROR]: "${err}"`,
+        "color: red; font-weight: bold"
+      );
+
+      let error = {};
+
+      if (typeof err === "string") {
+        const errParts = err.split("|");
+        error =
+          errParts.length > 1
+            ? { message: errParts[1], debug: errParts[0] }
+            : { message: err };
+      } else {
+        error = {
+          message: err.message,
+          debug: JSON.stringify(err)
+        };
+      }
+
+      // this.setState({
+      //   isAuthenticated: false,
+      //   user: {},
+      //   error: error
+      // });
     }
-  };
+  }
+
+  useEffect(() => {
+    const userAgentApp = new UserAgentApplication({
+      auth: {
+        clientId: config.appId
+      },
+      cache: {
+        cacheLocation: "localStorage",
+        storeAuthStateInCookie: true
+      }
+    });
+
+    async function login(userAgentApp) {
+      try {
+        await userAgentApp.loginPopup({
+          scopes: config.scopes,
+          prompt: "select_account"
+        });
+        await getUserProfile(userAgentApp);
+      } catch (err) {
+        console.log(
+          `%c [FETCH ERROR]: "${err}"`,
+          "color: red; font-weight: bold"
+        );
+
+        let error = {};
+
+        if (typeof err === "string") {
+          const errParts = err.split("|");
+          error =
+            errParts.length > 1
+              ? { message: errParts[1], debug: errParts[0] }
+              : { message: err };
+        } else {
+          error = {
+            message: err.message,
+            debug: JSON.stringify(err)
+          };
+        }
+
+        // this.setState({
+        //   isAuthenticated: false,
+        //   user: {},
+        //   error: error
+        // });
+      }
+    }
+
+    const user = userAgentApp.getAccount();
+
+    if (user) {
+      getUserProfile(userAgentApp);
+    } else {
+      login(userAgentApp);
+    }
+  }, []);
 
   return (
-    <StateProvider reducer={reducer} initialState={initialState}>
+    <StoreProvider value={[state, dispatch]}>
       <ThemeProvider theme={theme}>
         <div className="app">
           <div className="header">
@@ -88,7 +151,7 @@ function App() {
           </div>
         </div>
       </ThemeProvider>
-    </StateProvider>
+    </StoreProvider>
   );
 }
 

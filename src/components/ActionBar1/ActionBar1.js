@@ -8,7 +8,7 @@ import ShareIcon from "@material-ui/icons/Share";
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import SvgIcon from "@material-ui/core/SvgIcon";
-import { useStateValue } from "../../state";
+import { useStateValue } from "../../Store";
 
 const reminderIcon = (
   <IconButton aria-label="reminder">
