@@ -31,3 +31,15 @@ export async function getEvents(accessToken) {
 
   return events;
 }
+
+export async function getMails(accessToken) {
+  const client = getAuthenticatedClient(accessToken);
+
+  const mails = await client
+    .api("/me/messages?$filter=importance eq 'high'")
+    .select("id,subject,sender,from,toRecipients,bodyPreview")
+    .orderby("receivedDateTime DESC")
+    .get();
+
+  return mails;
+}

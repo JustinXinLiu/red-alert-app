@@ -6,7 +6,7 @@ import "./App.scss";
 import { AppBar, ActionBar, ZStackCardsView } from "./components";
 import config from "./Config";
 import { UserAgentApplication } from "msal";
-import { getUserDetails } from "./services/GraphService";
+import { getUserDetails, getMails } from "./services/GraphService";
 
 const theme = createMuiTheme({
   palette: {
@@ -46,7 +46,7 @@ function App() {
         });
 
         if (accessToken) {
-          // Get the user's profile from Graph
+          // Get the user's profile from Graph.
           const user = await getUserDetails(accessToken);
           console.log("user", user);
 
@@ -61,6 +61,9 @@ function App() {
               error: null
             }
           });
+
+          const emails = await getMails(accessToken);
+          console.log("emails", emails);
         }
       } catch (err) {
         handleError(err);
