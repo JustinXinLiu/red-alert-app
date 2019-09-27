@@ -30,6 +30,11 @@ export const Reducer = (state, action) => {
         ...state,
         ...action.payload
       };
+    case "handleError":
+      return {
+        ...state,
+        ...action.payload
+      };
     case "showInboxActions":
       return {
         ...state,

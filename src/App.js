@@ -23,63 +23,6 @@ const theme = createMuiTheme({
 function App() {
   const [state, dispatch] = useReducer(Reducer, InitialState);
 
-  async function getUserProfile(userAgentApp) {
-    try {
-      // Get the access token silently
-      // If the cache contains a non-expired token, this function
-      // will just return the cached token. Otherwise, it will
-      // make a request to the Azure OAuth endpoint to get a token
-
-      const accessToken = await userAgentApp.acquireTokenSilent({
-        scopes: config.scopes
-      });
-
-      if (accessToken) {
-        // Get the user's profile from Graph
-        const user = await getUserDetails(accessToken);
-        console.log("user", user);
-
-        dispatch({
-          type: "getUserDetails",
-          payload: {
-            user: {
-              displayName: user.displayName,
-              email: user.mail || user.userPrincipalName
-            },
-            authenticated: true,
-            error: null
-          }
-        });
-      }
-    } catch (err) {
-      console.log(
-        `%c [FETCH ERROR]: "${err}"`,
-        "color: red; font-weight: bold"
-      );
-
-      let error = {};
-
-      if (typeof err === "string") {
-        const errParts = err.split("|");
-        error =
-          errParts.length > 1
-            ? { message: errParts[1], debug: errParts[0] }
-            : { message: err };
-      } else {
-        error = {
-          message: err.message,
-          debug: JSON.stringify(err)
-        };
-      }
-
-      // this.setState({
-      //   isAuthenticated: false,
-      //   user: {},
-      //   error: error
-      // });
-    }
-  }
-
   useEffect(() => {
     const userAgentApp = new UserAgentApplication({
       auth: {
@@ -91,6 +34,39 @@ function App() {
       }
     });
 
+    async function getUserProfile(userAgentApp) {
+      try {
+        // Get the access token silently
+        // If the cache contains a non-expired token, this function
+        // will just return the cached token. Otherwise, it will
+        // make a request to the Azure OAuth endpoint to get a token
+
+        const accessToken = await userAgentApp.acquireTokenSilent({
+          scopes: config.scopes
+        });
+
+        if (accessToken) {
+          // Get the user's profile from Graph
+          const user = await getUserDetails(accessToken);
+          console.log("user", user);
+
+          dispatch({
+            type: "getUserDetails",
+            payload: {
+              user: {
+                displayName: user.displayName,
+                email: user.mail || user.userPrincipalName
+              },
+              authenticated: true,
+              error: null
+            }
+          });
+        }
+      } catch (err) {
+        handleError(err);
+      }
+    }
+
     async function login(userAgentApp) {
       try {
         await userAgentApp.loginPopup({
@@ -99,31 +75,7 @@ function App() {
         });
         await getUserProfile(userAgentApp);
       } catch (err) {
-        console.log(
-          `%c [FETCH ERROR]: "${err}"`,
-          "color: red; font-weight: bold"
-        );
-
-        let error = {};
-
-        if (typeof err === "string") {
-          const errParts = err.split("|");
-          error =
-            errParts.length > 1
-              ? { message: errParts[1], debug: errParts[0] }
-              : { message: err };
-        } else {
-          error = {
-            message: err.message,
-            debug: JSON.stringify(err)
-          };
-        }
-
-        // this.setState({
-        //   isAuthenticated: false,
-        //   user: {},
-        //   error: error
-        // });
+        handleError(err);
       }
     }
 
@@ -153,6 +105,31 @@ function App() {
       </ThemeProvider>
     </StoreProvider>
   );
+
+  function handleError(err) {
+    console.log(`%c [FETCH ERROR]: "${err}"`, "color: red; font-weight: bold");
+    let error = {};
+    if (typeof err === "string") {
+      const errParts = err.split("|");
+      error =
+        errParts.length > 1
+          ? { message: errParts[1], debug: errParts[0] }
+          : { message: err };
+    } else {
+      error = {
+        message: err.message,
+        debug: JSON.stringify(err)
+      };
+    }
+    dispatch({
+      type: "handleError",
+      payload: {
+        user: {},
+        authenticated: false,
+        error: error
+      }
+    });
+  }
 }
 
 export default App;
