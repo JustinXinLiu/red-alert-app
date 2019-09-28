@@ -26,6 +26,8 @@ function ZStackCardsView() {
     dispatch
   ] = useStateValue();
 
+  console.log("emailPreviewCards", emailPreviewCards);
+
   const handleAdditionalActionsOnTouchOver = e => {
     const touches = e.changedTouches;
     // console.log('touches', touches);

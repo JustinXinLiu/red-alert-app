@@ -35,6 +35,11 @@ export const Reducer = (state, action) => {
         ...state,
         ...action.payload
       };
+    case "getEmailPreviews":
+      return {
+        ...state,
+        emailPreviewCards: action.payload
+      };
     case "showInboxActions":
       return {
         ...state,

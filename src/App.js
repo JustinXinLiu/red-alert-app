@@ -63,7 +63,10 @@ function App() {
           });
 
           const emails = await getMails(accessToken);
-          console.log("emails", emails);
+          dispatch({
+            type: "getEmailPreviews",
+            payload: emails.value
+          });
         }
       } catch (err) {
         handleError(err);
