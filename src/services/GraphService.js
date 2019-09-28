@@ -36,8 +36,9 @@ export async function getMails(accessToken) {
   const client = getAuthenticatedClient(accessToken);
 
   const mails = await client
-    .api("/me/messages?$filter=importance eq 'high'")
-    .select("id,subject,sender,from,toRecipients,bodyPreview")
+    .api("/me/messages")
+    .select("id,subject,receivedDateTime,sender,from,toRecipients,bodyPreview")
+    .filter("receivedDateTime ge 1900-01-01T00:00:00Z and importance eq 'high'")
     .orderby("receivedDateTime DESC")
     .get();
 
