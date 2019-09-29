@@ -2,5 +2,36 @@
 
 .EmailPreviewCard {
   @include absolute;
+  display: flex;
+  flex-direction: column;
+
   pointer-events: none;
+  padding: 32px;
+}
+
+.email-type {
+  display: flex;
+  align-self: flex-start;
+  background-color: $accent-1;
+  color: white;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.email-type span {
+  margin: 2px 4px;
+}
+
+.email-subject {
+  font-family: $font-var;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.24;
+  margin: 8px 0;
+}
+
+.test {
+  flex: 1;
 }

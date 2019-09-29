@@ -263,7 +263,7 @@ function ZStackCardsView() {
         onTouchEnd={handleTouchEnd}
         onTouchCancel={handleTouchCancel}
       >
-        <EmailPreviewCard subject={emailPreviewCards[i].subject} />
+        <EmailPreviewCard mail={emailPreviewCards[i]} />
       </animated.div>
     </animated.div>
   ));
