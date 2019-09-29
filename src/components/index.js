@@ -4,6 +4,7 @@ import ZStackCardsView from "./ZStackCardsView";
 import ActionBar from "./ActionBar";
 import InboxMenu from "./InboxMenu";
 import ReminderMenu from "./ReminderMenu";
+import EmailPreviewCard from "./EmailPreviewCard";
 
 export {
   AppBar,
@@ -11,5 +12,6 @@ export {
   ReminderMenu,
   ActionBar,
   ActionBar1,
-  ZStackCardsView
+  ZStackCardsView,
+  EmailPreviewCard
 };

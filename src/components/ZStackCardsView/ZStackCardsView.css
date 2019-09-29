@@ -10,6 +10,7 @@
 }
 
 .card {
+  position: relative;
   background-color: white;
   width: 34vh;
   height: 44vh;

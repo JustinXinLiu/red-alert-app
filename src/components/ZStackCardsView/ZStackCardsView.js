@@ -3,6 +3,7 @@ import "./ZStackCardsView.css";
 import { useSprings, animated, to } from "react-spring";
 import { useDrag } from "react-use-gesture";
 import { useStateValue } from "../../Store";
+import { EmailPreviewCard } from "../../components";
 
 // This is being used down there in the view, it interpolates rotation and scale into a css transform.
 const transform = (r, s) =>
@@ -257,14 +258,13 @@ function ZStackCardsView() {
       <animated.div
         className="card"
         {...gesture(i)}
-        style={{
-          transform: to([rotation, scale], transform),
-          backgroundImage: `url(${emailPreviewCards[i]})`
-        }}
+        style={{ transform: to([rotation, scale], transform) }}
         onTouchMove={handleAdditionalActionsOnTouchOver}
         onTouchEnd={handleTouchEnd}
         onTouchCancel={handleTouchCancel}
-      />
+      >
+        <EmailPreviewCard subject={emailPreviewCards[i].subject} />
+      </animated.div>
     </animated.div>
   ));
 }

@@ -1,9 +1,12 @@
 @import "../node_modules/normalize.css/normalize.css";
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,500,600,600i,700&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i&display=swap");
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  font-family: Montserrat, Lato;
+  /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+    sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
