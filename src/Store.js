@@ -18,7 +18,7 @@ export const InitialState = {
     y: (count - 1 - i) * -18,
     scale: 1,
     rotation: 0,
-    delay: i * 100
+    delay: i * 50
   }),
   touchState: { overInbox: false, overReminder: false }
 };

@@ -6,7 +6,7 @@ import { useStateValue } from "../../Store";
 import { EmailPreviewCard } from "../../components";
 
 // This is being used down there in the view, it interpolates rotation and scale into a css transform.
-const transform = (r, s) =>
+const toTransform = (r, s) =>
   `rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
 
 let _inboxEnter, _reminderEnter, _timeout;
@@ -194,7 +194,10 @@ function ZStackCardsView() {
       }
 
       set(i => {
-        // We're only interested in changing spring-data for the current spring.
+        // TODO: Currently only interested in changing the current spring.
+        // However, in the future the current card should be able to manipulate
+        // other cards. For example, by dragging the current card down, then
+        // fade in the card underneath it.
         if (index !== i) return;
 
         const removed = removedEmailPreviewCards.has(index);
@@ -220,6 +223,7 @@ function ZStackCardsView() {
 
         // console.log("directionY", directionY);
         // console.log("offset y", y);
+        // console.log("opacity", (Math.abs(y) * 2) / window.innerHeight);
 
         return {
           x,
@@ -260,7 +264,7 @@ function ZStackCardsView() {
       <animated.div
         className="card"
         {...gesture(i)}
-        style={{ transform: to([rotation, scale], transform) }}
+        style={{ transform: to([rotation, scale], toTransform) }}
         onTouchMove={handleAdditionalActionsOnTouchOver}
         onTouchEnd={handleTouchEnd}
         onTouchCancel={handleTouchCancel}
