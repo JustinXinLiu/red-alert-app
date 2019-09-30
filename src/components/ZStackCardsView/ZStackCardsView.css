@@ -14,14 +14,14 @@
   background-color: white;
   width: 40vh;
   height: 54vh;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
   transition: box-shadow 0.2s;
   will-change: transform;
   touch-action: none;
 }
 
 .card:hover {
-  box-shadow: 0 2px 40px 4px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 2px 40px 4px rgba(0, 0, 0, 0.08);
 }
 
 .card:active {
