@@ -250,7 +250,9 @@ function ZStackCardsView() {
       style={{
         transform: to(
           [x, y],
-          (x, y) => `perspective(100px) translate3d(${x}px, ${y}px, ${4 * i}px)`
+          (x, y) =>
+            `perspective(100px) translate3d(${x}px, ${y}px, ${-4 *
+              (emailPreviewCards.length - i)}px)`
         )
       }}
     >

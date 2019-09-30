@@ -39,7 +39,7 @@ export async function getMails(accessToken) {
     .api("/me/messages")
     .select("id,subject,receivedDateTime,sender,from,toRecipients,bodyPreview")
     .filter("receivedDateTime ge 1900-01-01T00:00:00Z and importance eq 'high'")
-    .orderby("receivedDateTime DESC")
+    .orderby("receivedDateTime ASC")
     .get();
 
   return mails;

@@ -15,7 +15,7 @@
   background-color: $accent-1;
   color: white;
   border-radius: 2px;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
 }
@@ -27,9 +27,9 @@
 .email-subject {
   color: $gray-1;
   font-family: $font-var;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
-  line-height: 1.24;
+  line-height: 1.25;
   margin: 8px 0 12px 0;
 }
 
@@ -48,14 +48,14 @@
 
   .name {
     color: $gray-1;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     opacity: 0.66;
   }
 
   .to-list {
     color: $gray-1;
-    font-size: 11px;
+    font-size: 12px;
     opacity: 0.4;
     margin-top: 2px;
     text-transform: capitalize;
@@ -64,8 +64,8 @@
 
 p.email-body {
   flex: 1;
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.6;
   opacity: 0.75;
   margin-top: 24px;
   white-space: pre-line;
