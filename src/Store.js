@@ -40,6 +40,12 @@ export const Reducer = (state, action) => {
         ...state,
         emailPreviewCards: action.payload
       };
+    case "removeEmailPreviewCard":
+      const i = action.payload;
+      state.emailPreviewCards.splice(i, 1);
+      return {
+        ...state
+      };
     case "showInboxActions":
       return {
         ...state,

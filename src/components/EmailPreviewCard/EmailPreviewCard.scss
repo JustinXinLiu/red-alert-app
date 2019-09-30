@@ -4,7 +4,6 @@
   @include absolute;
   display: flex;
   flex-direction: column;
-
   pointer-events: none;
   padding: 32px 32px 0 32px;
 }
@@ -24,7 +23,7 @@
   margin: 2px 4px;
 }
 
-.email-subject {
+h2.email-subject {
   color: $gray-1;
   font-family: $font-var;
   font-size: 18px;

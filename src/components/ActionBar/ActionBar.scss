@@ -1,7 +1,12 @@
 @import "../../styles/variables.scss";
 
 .ActionBar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 48px;
   display: flex;
   justify-content: space-around;
   margin: 0 24px;
+  pointer-events: none;
 }

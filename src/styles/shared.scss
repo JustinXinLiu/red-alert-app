@@ -23,6 +23,8 @@ svg {
 }
 
 button {
+  border: none;
+  outline: none;
   transition: all 0.6s;
 
   &.circle-button {

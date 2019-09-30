@@ -3,7 +3,7 @@ import { StoreProvider, Reducer, InitialState } from "./Store";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import "./App.scss";
-import { AppBar, ActionBar, ZStackCardsView } from "./components";
+import { AppBar, ActionBar, ZStackCardsView, MessageView } from "./components";
 import config from "./Config";
 import { UserAgentApplication } from "msal";
 import { getUserDetails, getMails } from "./services/GraphService";
@@ -97,16 +97,14 @@ function App() {
   return (
     <StoreProvider value={[state, dispatch]}>
       <ThemeProvider theme={theme}>
-        <div className="app">
-          <div className="header">
-            <AppBar />
-          </div>
+        <div className="App">
+          <AppBar />
+
+          <MessageView />
 
           <ZStackCardsView />
 
-          <div className="footer">
-            <ActionBar />
-          </div>
+          <ActionBar />
         </div>
       </ThemeProvider>
     </StoreProvider>

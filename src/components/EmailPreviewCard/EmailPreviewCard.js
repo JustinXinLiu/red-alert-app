@@ -32,7 +32,7 @@ function EmailPreviewCard(props) {
       <div className="email-type">
         <span>high importance</span>
       </div>
-      <div className="email-subject">{mail ? subject : ""}</div>
+      <h2 className="email-subject">{mail ? subject : ""}</h2>
       <section className="sender-section">
         <div className="avatar"></div>
         <div className="name">{senderName}</div>

@@ -188,9 +188,8 @@ function ZStackCardsView() {
         // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out.
         removedEmailPreviewCards.add(index);
 
-        if (index > -1) {
-          emailPreviewCards.splice(index, 1);
-        }
+        if (index > -1)
+          dispatch({ type: "removeEmailPreviewCard", payload: index });
       }
 
       set(i => {

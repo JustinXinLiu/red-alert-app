@@ -1,28 +1,9 @@
-.app {
+@import "./styles/shared.scss";
+
+.App {
   position: fixed;
   width: 100vw;
   height: 100vh;
   user-select: none;
   background-color: rgba(237, 235, 228, 0.4);
-}
-
-.header {
-  z-index: 1;
-  position: fixed;
-  top: 24px;
-  left: 0;
-  right: 0;
-}
-
-.footer {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 48px;
-  pointer-events: none;
-}
-
-button {
-  border: none;
-  outline: none;
 }

@@ -1,9 +1,14 @@
 @import "../../styles/variables.scss";
 
 .AppBar {
+  position: fixed;
+  top: 24px;
+  left: 0;
+  right: 0;
   display: grid;
   grid-template-columns: auto 1fr auto;
   margin: 0 24px;
+  z-index: 1;
 }
 
 .logo {
