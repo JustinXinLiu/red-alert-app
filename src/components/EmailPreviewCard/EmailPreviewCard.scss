@@ -6,7 +6,7 @@
   flex-direction: column;
 
   pointer-events: none;
-  padding: 32px;
+  padding: 32px 32px 0 32px;
 }
 
 .email-type {
@@ -69,4 +69,5 @@ p.email-body {
   opacity: 0.75;
   margin-top: 24px;
   white-space: pre-line;
+  overflow: hidden;
 }
