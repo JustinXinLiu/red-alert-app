@@ -214,7 +214,7 @@ function ZStackCardsView() {
           ? deltaY
           : (emailPreviewCards.length - 1 - i) * -18;
         const rotation = removed
-          ? deltaX / 40 + direction * 10 * velocity
+          ? deltaX / 40 + direction * 2 * velocity
           : down
           ? deltaX / 40
           : 0; // How much the card tilts, flicking it harder makes it rotate faster.
