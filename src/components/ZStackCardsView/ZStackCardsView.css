@@ -1,6 +1,6 @@
 .card-wrapper {
   position: absolute;
-  top: 6vh;
+  /* top: 6vh; todo: need to enable this for PWA */
   width: 100vw;
   height: 100vh;
   will-change: transform;
@@ -12,8 +12,8 @@
 .card {
   position: relative;
   background-color: white;
-  width: 40vh;
-  height: 54vh;
+  width: 42vh;
+  height: 56vh;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
   transition: box-shadow 0.2s;
   will-change: transform;
@@ -24,6 +24,6 @@
   box-shadow: 0 2px 40px 4px rgba(0, 0, 0, 0.08);
 }
 
-.card:active {
+/* .card:active {
   box-shadow: 0 2px 40px 4px rgba(0, 0, 0, 0.12);
-}
+} */

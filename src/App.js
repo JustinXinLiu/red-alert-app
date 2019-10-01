@@ -100,7 +100,7 @@ function App() {
         <div className="App">
           <AppBar />
 
-          <MessageView />
+          {/* <MessageView /> */}
 
           <ZStackCardsView />
 
