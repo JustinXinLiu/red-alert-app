@@ -215,18 +215,14 @@ function ZStackCardsView() {
         // How much the card tilts, flicking it harder makes it rotate faster.
         const rotation = removed
           ? deltaX / 40 + direction * 2 * velocity
-          : down
+          : down && y > 0
           ? deltaX / 40
           : 0;
         // Scale up the active card when dragging it up.
-        const scale = down
-          ? y < 0
-            ? (-y / (window.innerHeight / 4)) * 0.2 + 1
-            : 1
-          : 1;
+        const scale = down ? (-y / (window.innerHeight / 4)) * 0.15 + 1 : 1;
 
         // console.log("directionY", directionY);
-        console.log("offset y", y);
+        // console.log("offset y", y);
         // console.log("opacity", (Math.abs(y) * 2) / window.innerHeight);
 
         return {
