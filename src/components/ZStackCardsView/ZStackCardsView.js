@@ -166,8 +166,8 @@ function ZStackCardsView() {
       last,
       args: [index]
     }) => {
-      // When the volocity is greater than 0.2, we consider it's a flick and fly out the card.
-      const flick = velocity > 0.2;
+      // When the volocity is greater than 0.3, we consider it's a flick and fly out the card.
+      const flick = velocity > 0.3;
       // Determine which direction the card should fly out to.
       let direction;
       if (_flyoutToBottomLeft) {
@@ -212,16 +212,21 @@ function ZStackCardsView() {
           : down
           ? deltaY
           : (emailPreviewCards.length - 1 - i) * -18;
+        // How much the card tilts, flicking it harder makes it rotate faster.
         const rotation = removed
           ? deltaX / 40 + direction * 2 * velocity
           : down
           ? deltaX / 40
-          : 0; // How much the card tilts, flicking it harder makes it rotate faster.
-        // Active cards lift up a bit.
-        const scale = down ? 1.1 : 1;
+          : 0;
+        // Scale up the active card when dragging it up.
+        const scale = down
+          ? y < 0
+            ? (-y / (window.innerHeight / 4)) * 0.2 + 1
+            : 1
+          : 1;
 
         // console.log("directionY", directionY);
-        // console.log("offset y", y);
+        console.log("offset y", y);
         // console.log("opacity", (Math.abs(y) * 2) / window.innerHeight);
 
         return {
@@ -229,7 +234,7 @@ function ZStackCardsView() {
           y,
           rotation,
           scale,
-          config: { friction: 50, tension: down ? 800 : removed ? 200 : 500 }
+          config: { friction: 60, tension: down ? 800 : removed ? 200 : 500 }
         };
       });
 
