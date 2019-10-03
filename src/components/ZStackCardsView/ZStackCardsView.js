@@ -1,5 +1,5 @@
 import React from "react";
-import "./ZStackCardsView.css";
+import "./ZStackCardsView.scss";
 import { useSprings, animated, to } from "react-spring";
 import { useDrag } from "react-use-gesture";
 import { useStateValue } from "../../Store";
@@ -190,6 +190,12 @@ function ZStackCardsView() {
 
         if (index > -1)
           dispatch({ type: "removeEmailPreviewCard", payload: index });
+      } else if (
+        !down &&
+        ((flick && directionY < 0 && deltaY < 0) ||
+          deltaY <= -window.innerHeight / 6)
+      ) {
+        console.log("open email");
       }
 
       set(i => {
@@ -214,9 +220,9 @@ function ZStackCardsView() {
           : (emailPreviewCards.length - 1 - i) * -18;
         // How much the card tilts, flicking it harder makes it rotate faster.
         const rotation = removed
-          ? deltaX / 40 + direction * 2 * velocity
+          ? deltaX / 80 + direction * 2 * velocity
           : down && y > 0
-          ? deltaX / 40
+          ? deltaX / 32
           : 0;
         // Scale up the active card when dragging it up.
         const scale = down ? (-y / (window.innerHeight / 4)) * 0.15 + 1 : 1;
@@ -260,6 +266,10 @@ function ZStackCardsView() {
         )
       }}
     >
+      <animated.div
+        className="card bg"
+        style={{ transform: to([rotation, scale], toTransform) }}
+      ></animated.div>
       {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which). */}
       <animated.div
         className="card"

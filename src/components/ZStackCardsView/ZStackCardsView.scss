@@ -1,0 +1,33 @@
+.card-wrapper {
+  position: absolute;
+  /* top: 6vh; todo: need to enable this for PWA */
+  width: 100vw;
+  height: 100vh;
+  will-change: transform;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .card {
+    position: relative;
+    width: 42vh;
+    height: 56vh;
+    will-change: transform;
+    touch-action: none;
+  }
+
+  .card.bg {
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.2s;
+
+    & > div.card-bg:hover {
+      box-shadow: 0 2px 40px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    /* .& > div.card-bg:active {
+      box-shadow: 0 2px 40px 4px rgba(0, 0, 0, 0.12);
+    } */
+  }
+}
