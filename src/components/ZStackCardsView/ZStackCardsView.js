@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useRef } from "react";
 import "./ZStackCardsView.scss";
 import { useSprings, animated, to } from "react-spring";
 import { useDrag } from "react-use-gesture";
 import { useStateValue } from "../../Store";
 import { EmailPreviewCard } from "../../components";
-
 // This is being used down there in the view, it interpolates rotation and scale into a css transform.
 const toTransform = (r, s) =>
   `rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
@@ -13,6 +12,8 @@ let _inboxEnter, _reminderEnter, _timeout;
 let _currentPopupButton, _selectedAction;
 let _flyoutToBottomLeft = false,
   _flyoutToBottomRight = false;
+let _triggerFullEmailView = false,
+  _fullEmailView = false;
 
 function ZStackCardsView() {
   const [
@@ -22,12 +23,15 @@ function ZStackCardsView() {
       removedEmailPreviewCards,
       cardSpringDataFrom,
       cardSpringDataTo,
-      touchState
+      touchState,
+      enterEmailView
     },
     dispatch
   ] = useStateValue();
 
   console.log("emailPreviewCards", emailPreviewCards);
+
+  const cardBg = useRef(null);
 
   const handleAdditionalActionsOnTouchOver = e => {
     const touches = e.changedTouches;
@@ -151,7 +155,7 @@ function ZStackCardsView() {
   };
 
   // Create a bunch of springs for later bound to each card.
-  const [props, set] = useSprings(maxDisplaySize - 1, i => ({
+  const [springs, set] = useSprings(maxDisplaySize - 1, i => ({
     from: cardSpringDataFrom(),
     ...cardSpringDataTo(emailPreviewCards.length, i)
   }));
@@ -179,9 +183,10 @@ function ZStackCardsView() {
       }
 
       if (
-        _flyoutToBottomLeft ||
-        _flyoutToBottomRight ||
-        (!down && flick && directionY >= 0)
+        !_fullEmailView &&
+        (_flyoutToBottomLeft ||
+          _flyoutToBottomRight ||
+          (!down && flick && directionY >= 0))
       ) {
         _flyoutToBottomLeft = _flyoutToBottomRight = false;
 
@@ -195,7 +200,13 @@ function ZStackCardsView() {
         ((flick && directionY < 0 && deltaY < 0) ||
           deltaY <= -window.innerHeight / 6)
       ) {
-        console.log("open email");
+        const cardBgElement = cardBg.current;
+
+        console.log("open email", cardBgElement);
+        dispatch({ type: "enterFullEmailView" });
+
+        _triggerFullEmailView = true;
+        _fullEmailView = true;
       }
 
       set(i => {
@@ -208,24 +219,31 @@ function ZStackCardsView() {
         const removed = removedEmailPreviewCards.has(index);
 
         // When a card is removed it flys out left or right, otherwise goes back to zero.
-        const x = removed
+        let x = removed
           ? (window.innerWidth / 2) * direction
           : down
           ? deltaX
           : 0;
-        const y = removed
+        let y = removed
           ? window.innerHeight
           : down
           ? deltaY
           : (emailPreviewCards.length - 1 - i) * -18;
         // How much the card tilts, flicking it harder makes it rotate faster.
-        const rotation = removed
+        let rotation = removed
           ? deltaX / 80 + direction * 2 * velocity
           : down && y > 0
           ? deltaX / 32
           : 0;
         // Scale up the active card when dragging it up.
-        const scale = down ? (-y / (window.innerHeight / 4)) * 0.15 + 1 : 1;
+        let scale = down ? (-y / (window.innerHeight / 4)) * 0.15 + 1 : 1;
+
+        if (_triggerFullEmailView) {
+          x = 0;
+          y = -40;
+          rotation = 0;
+          scale = 1.25;
+        }
 
         // console.log("directionY", directionY);
         // console.log("offset y", y);
@@ -242,10 +260,19 @@ function ZStackCardsView() {
 
       if (last && !down) {
         set(i => {
-          if (i < emailPreviewCards.length)
+          if (!_triggerFullEmailView && i < emailPreviewCards.length) {
+            console.log("inner", _triggerFullEmailView);
             return cardSpringDataTo(emailPreviewCards.length, i);
+          }
         });
+
+        if (!_triggerFullEmailView) {
+          _fullEmailView = false;
+        }
       }
+
+      console.log("outer", _triggerFullEmailView);
+      _triggerFullEmailView = false;
 
       // if (!down && gone.size === originalSize)
       //   setTimeout(() => gone.clear() || set(i => to(i)), 600);
@@ -253,7 +280,7 @@ function ZStackCardsView() {
   );
 
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
-  return props.map(({ x, y, rotation, scale }, i) => (
+  return springs.map(({ x, y, rotation, scale }, i) => (
     <animated.div
       className="card-wrapper"
       key={i}
@@ -267,6 +294,7 @@ function ZStackCardsView() {
       }}
     >
       <animated.div
+        ref={cardBg}
         className="card bg"
         style={{ transform: to([rotation, scale], toTransform) }}
       ></animated.div>

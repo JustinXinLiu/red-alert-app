@@ -13,14 +13,15 @@ export const InitialState = {
     rotation: 0,
     scale: 1
   }),
-  cardSpringDataTo: (count, i) => ({
+  cardSpringDataTo: (count, i, up) => ({
     x: 0,
     y: (count - 1 - i) * -18,
     scale: 1,
     rotation: 0,
     delay: i * 50
   }),
-  touchState: { overInbox: false, overReminder: false }
+  touchState: { overInbox: false, overReminder: false },
+  enterEmailView: false
 };
 
 export const Reducer = (state, action) => {
@@ -72,6 +73,16 @@ export const Reducer = (state, action) => {
     case "remindEmailInTime":
       return {
         ...state
+      };
+    case "enterFullEmailView":
+      return {
+        ...state,
+        enterEmailView: true
+      };
+    case "exitFullEmailView":
+      return {
+        ...state,
+        enterEmailView: false
       };
 
     default:
