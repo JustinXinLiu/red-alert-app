@@ -11,12 +11,16 @@ export const InitialState = {
     x: 0,
     y: window.outerHeight,
     rotation: 0,
-    scale: 1
+    scale: 1,
+    scalgXBg: 1,
+    scaleYBg: 1
   }),
-  cardSpringDataTo: (count, i, up) => ({
+  cardSpringDataTo: (count, i) => ({
     x: 0,
     y: (count - 1 - i) * -18,
     scale: 1,
+    scaleXBg: 1,
+    scaleYBg: 1,
     rotation: 0,
     delay: i * 50
   }),

@@ -1,12 +1,15 @@
-import React, { useRef } from "react";
+import React from "react";
 import "./ZStackCardsView.scss";
 import { useSprings, animated, to } from "react-spring";
 import { useDrag } from "react-use-gesture";
 import { useStateValue } from "../../Store";
 import { EmailPreviewCard } from "../../components";
+
 // This is being used down there in the view, it interpolates rotation and scale into a css transform.
-const toTransform = (r, s) =>
+const toCardTransform = (r, s) =>
   `rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
+const toCardBgTransform = (r, sx, sy) =>
+  `rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${sx},${sy})`;
 
 let _inboxEnter, _reminderEnter, _timeout;
 let _currentPopupButton, _selectedAction;
@@ -30,8 +33,6 @@ function ZStackCardsView() {
   ] = useStateValue();
 
   console.log("emailPreviewCards", emailPreviewCards);
-
-  const cardBg = useRef(null);
 
   const handleAdditionalActionsOnTouchOver = e => {
     const touches = e.changedTouches;
@@ -200,9 +201,6 @@ function ZStackCardsView() {
         ((flick && directionY < 0 && deltaY < 0) ||
           deltaY <= -window.innerHeight / 6)
       ) {
-        const cardBgElement = cardBg.current;
-
-        console.log("open email", cardBgElement);
         dispatch({ type: "enterFullEmailView" });
 
         _triggerFullEmailView = true;
@@ -237,12 +235,16 @@ function ZStackCardsView() {
           : 0;
         // Scale up the active card when dragging it up.
         let scale = down ? (-y / (window.innerHeight / 4)) * 0.15 + 1 : 1;
+        let scaleXBg = scale;
+        let scaleYBg = scale;
 
         if (_triggerFullEmailView) {
           x = 0;
-          y = -40;
+          y = -80;
           rotation = 0;
-          scale = 1.25;
+          scaleXBg = 1.2;
+          scaleYBg = 2.2;
+          scale = 1.1;
         }
 
         // console.log("directionY", directionY);
@@ -254,6 +256,8 @@ function ZStackCardsView() {
           y,
           rotation,
           scale,
+          scaleXBg,
+          scaleYBg,
           config: { friction: 60, tension: down ? 800 : removed ? 200 : 500 }
         };
       });
@@ -261,7 +265,6 @@ function ZStackCardsView() {
       if (last && !down) {
         set(i => {
           if (!_triggerFullEmailView && i < emailPreviewCards.length) {
-            console.log("inner", _triggerFullEmailView);
             return cardSpringDataTo(emailPreviewCards.length, i);
           }
         });
@@ -271,7 +274,6 @@ function ZStackCardsView() {
         }
       }
 
-      console.log("outer", _triggerFullEmailView);
       _triggerFullEmailView = false;
 
       // if (!down && gone.size === originalSize)
@@ -280,7 +282,7 @@ function ZStackCardsView() {
   );
 
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
-  return springs.map(({ x, y, rotation, scale }, i) => (
+  return springs.map(({ x, y, rotation, scale, scaleXBg, scaleYBg }, i) => (
     <animated.div
       className="card-wrapper"
       key={i}
@@ -294,15 +296,16 @@ function ZStackCardsView() {
       }}
     >
       <animated.div
-        ref={cardBg}
         className="card bg"
-        style={{ transform: to([rotation, scale], toTransform) }}
+        style={{
+          transform: to([rotation, scaleXBg, scaleYBg], toCardBgTransform)
+        }}
       ></animated.div>
       {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which). */}
       <animated.div
         className="card"
         {...gesture(i)}
-        style={{ transform: to([rotation, scale], toTransform) }}
+        style={{ transform: to([rotation, scale], toCardTransform) }}
         onTouchMove={handleAdditionalActionsOnTouchOver}
         onTouchEnd={handleTouchEnd}
         onTouchCancel={handleTouchCancel}
