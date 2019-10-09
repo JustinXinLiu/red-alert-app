@@ -4,7 +4,7 @@ export const InitialState = {
   user: undefined,
   authenticated: false,
   error: undefined,
-  maxDisplaySize: 5,
+  maxDisplaySize: 4,
   emailPreviewCards: ["", "", "", ""],
   removedEmailPreviewCards: new Set(),
   cardSpringDataFrom: () => ({

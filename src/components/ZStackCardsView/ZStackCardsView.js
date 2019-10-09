@@ -156,7 +156,7 @@ function ZStackCardsView() {
   };
 
   // Create a bunch of springs for later bound to each card.
-  const [springs, set] = useSprings(maxDisplaySize - 1, i => ({
+  const [springs, set] = useSprings(maxDisplaySize, i => ({
     from: cardSpringDataFrom(),
     ...cardSpringDataTo(emailPreviewCards.length, i)
   }));

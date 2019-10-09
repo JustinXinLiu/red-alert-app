@@ -62,10 +62,11 @@ function App() {
             }
           });
 
-          const emails = await getMails(accessToken);
+          const mailsData = await getMails(accessToken);
+          const emails = mailsData.value.slice(-InitialState.maxDisplaySize);
           dispatch({
             type: "getEmailPreviews",
-            payload: emails.value
+            payload: emails
           });
         }
       } catch (err) {
