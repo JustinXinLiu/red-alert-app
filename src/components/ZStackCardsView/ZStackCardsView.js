@@ -6,10 +6,11 @@ import { useStateValue } from "../../Store";
 import { EmailPreviewCard } from "../../components";
 
 // This is being used down there in the view, it interpolates rotation and scale into a css transform.
-const toCardTransform = (r, s) =>
-  `rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
+const toCardTransform = (y, r, s) =>
+  `translate3d(0, ${y}px, 0) rotateY(${r /
+    10}deg) rotateZ(${r}deg) scale(${s})`;
 const toCardBgTransform = (r, sx, sy) =>
-  `rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${sx},${sy})`;
+  `rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${sx}, ${sy})`;
 
 let _inboxEnter, _reminderEnter, _timeout;
 let _currentPopupButton, _selectedAction;
@@ -26,8 +27,8 @@ function ZStackCardsView() {
       removedEmailPreviewCards,
       cardSpringDataFrom,
       cardSpringDataTo,
-      touchState,
-      enterEmailView
+      touchState
+      // enterEmailView
     },
     dispatch
   ] = useStateValue();
@@ -227,6 +228,7 @@ function ZStackCardsView() {
           : down
           ? deltaY
           : (emailPreviewCards.length - 1 - i) * -18;
+        let yContent = 0;
         // How much the card tilts, flicking it harder makes it rotate faster.
         let rotation = removed
           ? deltaX / 80 + direction * 2 * velocity
@@ -240,7 +242,8 @@ function ZStackCardsView() {
 
         if (_triggerFullEmailView) {
           x = 0;
-          y = -80;
+          y = 0;
+          yContent = -80;
           rotation = 0;
           scaleXBg = 1.2;
           scaleYBg = 2.2;
@@ -250,6 +253,7 @@ function ZStackCardsView() {
         return {
           x,
           y,
+          yContent,
           rotation,
           scale,
           scaleXBg,
@@ -278,38 +282,42 @@ function ZStackCardsView() {
   );
 
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
-  return springs.map(({ x, y, rotation, scale, scaleXBg, scaleYBg }, i) => (
-    <animated.div
-      className="card-wrapper"
-      key={i}
-      style={{
-        transform: to(
-          [x, y],
-          (x, y) =>
-            `perspective(100px) translate3d(${x}px, ${y}px, ${-4 *
-              (emailPreviewCards.length - i)}px)`
-        )
-      }}
-    >
+  return springs.map(
+    ({ x, y, yContent, rotation, scale, scaleXBg, scaleYBg }, i) => (
       <animated.div
-        className="card bg"
+        className="card-wrapper"
+        key={i}
         style={{
-          transform: to([rotation, scaleXBg, scaleYBg], toCardBgTransform)
+          transform: to(
+            [x, y],
+            (x, y) =>
+              `perspective(100px) translate3d(${x}px, ${y}px, ${-4 *
+                (emailPreviewCards.length - i)}px)`
+          )
         }}
-      ></animated.div>
-      {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which). */}
-      <animated.div
-        className="card"
-        {...gesture(i)}
-        style={{ transform: to([rotation, scale], toCardTransform) }}
-        onTouchMove={handleAdditionalActionsOnTouchOver}
-        onTouchEnd={handleTouchEnd}
-        onTouchCancel={handleTouchCancel}
       >
-        <EmailPreviewCard mail={emailPreviewCards[i]} />
+        <animated.div
+          className="card bg"
+          style={{
+            transform: to([rotation, scaleXBg, scaleYBg], toCardBgTransform)
+          }}
+        ></animated.div>
+        {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which). */}
+        <animated.div
+          className="card"
+          {...gesture(i)}
+          style={{
+            transform: to([yContent, rotation, scale], toCardTransform)
+          }}
+          onTouchMove={handleAdditionalActionsOnTouchOver}
+          onTouchEnd={handleTouchEnd}
+          onTouchCancel={handleTouchCancel}
+        >
+          <EmailPreviewCard mail={emailPreviewCards[i]} />
+        </animated.div>
       </animated.div>
-    </animated.div>
-  ));
+    )
+  );
 }
 
 export default ZStackCardsView;
