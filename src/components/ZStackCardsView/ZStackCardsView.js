@@ -73,7 +73,7 @@ function ZStackCardsView() {
               _timeout = setTimeout(() => {
                 dispatch({ type: "showInboxActions" });
                 console.log("show Inbox actions");
-              }, 800);
+              }, 500);
             }
             break;
           case "reminder":
@@ -83,7 +83,7 @@ function ZStackCardsView() {
               _timeout = setTimeout(() => {
                 dispatch({ type: "showReminderActions" });
                 console.log("show Reminder actions");
-              }, 800);
+              }, 500);
             }
             break;
           default:
@@ -246,10 +246,6 @@ function ZStackCardsView() {
           scaleYBg = 2.2;
           scale = 1.1;
         }
-
-        // console.log("directionY", directionY);
-        // console.log("offset y", y);
-        // console.log("opacity", (Math.abs(y) * 2) / window.innerHeight);
 
         return {
           x,
