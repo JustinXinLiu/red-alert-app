@@ -217,37 +217,38 @@ function ZStackCardsView() {
 
         const removed = removedEmailPreviewCards.has(index);
 
-        // When a card is removed it flys out left or right, otherwise goes back to zero.
-        let x = removed
-          ? (window.innerWidth / 2) * direction
-          : down
-          ? deltaX
-          : 0;
-        let y = removed
-          ? window.innerHeight
-          : down
-          ? deltaY
-          : (emailPreviewCards.length - 1 - i) * -18;
-        let yContent = 0;
-        // How much the card tilts, flicking it harder makes it rotate faster.
-        let rotation = removed
-          ? deltaX / 80 + direction * 2 * velocity
-          : down && y > 0
-          ? deltaX / 32
-          : 0;
-        // Scale up the active card when dragging it up.
-        let scale = down ? (-y / (window.innerHeight / 4)) * 0.15 + 1 : 1;
-        let scaleXBg = scale;
-        let scaleYBg = scale;
+        let x = 0,
+          y = 0,
+          yContent = 0,
+          rotation = 0,
+          scale = 1,
+          scaleXBg = 1,
+          scaleYBg = 1;
 
         if (_triggerFullEmailView) {
-          x = 0;
-          y = 0;
           yContent = -80;
-          rotation = 0;
           scaleXBg = 1.2;
           scaleYBg = 2.2;
           scale = 1.1;
+        } else {
+          // When a card is removed...
+          if (removed) {
+            x = (window.innerWidth / 2) * direction;
+            y = window.innerHeight;
+            // How much the card tilts, flicking it harder makes it rotate faster.
+            rotation = deltaX / 80 + direction * 2 * velocity;
+            // When the finger is lifted up...
+          } else if (down) {
+            x = deltaX;
+            y = deltaY;
+            // Scale up the active card.
+            scale = (-y / (window.innerHeight / 4)) * 0.15 + 1;
+            scaleXBg = scale;
+            scaleYBg = scale;
+
+            // Only add rotation when dragging down.
+            if (y > 0) rotation = deltaX / 32;
+          }
         }
 
         return {
