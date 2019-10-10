@@ -74,7 +74,7 @@ function ZStackCardsView() {
               _timeout = setTimeout(() => {
                 dispatch({ type: "showInboxActions" });
                 console.log("show Inbox actions");
-              }, 500);
+              }, 300);
             }
             break;
           case "reminder":
@@ -84,7 +84,7 @@ function ZStackCardsView() {
               _timeout = setTimeout(() => {
                 dispatch({ type: "showReminderActions" });
                 console.log("show Reminder actions");
-              }, 500);
+              }, 300);
             }
             break;
           default:
