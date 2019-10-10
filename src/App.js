@@ -64,6 +64,10 @@ function App() {
 
           const mailsData = await getMails(accessToken);
           const emails = mailsData.value.slice(-InitialState.maxDisplaySize);
+          emails.map(
+            email => (email.bodyPreview = email.bodyPreview.concat("..."))
+          );
+
           dispatch({
             type: "getEmailPreviews",
             payload: emails
