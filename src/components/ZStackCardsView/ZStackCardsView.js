@@ -233,7 +233,7 @@ function ZStackCardsView() {
         } else {
           // When a card is removed...
           if (removed) {
-            x = (window.innerWidth / 2) * direction;
+            x = window.innerWidth * 3 * direction;
             y = window.innerHeight;
             // How much the card tilts, flicking it harder makes it rotate faster.
             rotation = deltaX / 80 + direction * 2 * velocity;
@@ -259,7 +259,7 @@ function ZStackCardsView() {
           scale,
           scaleXBg,
           scaleYBg,
-          config: { friction: 60, tension: down ? 800 : removed ? 200 : 500 }
+          config: { friction: 32, tension: down ? 400 : removed ? 50 : 300 }
         };
       });
 
