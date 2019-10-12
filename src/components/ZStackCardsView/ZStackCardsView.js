@@ -172,8 +172,8 @@ function ZStackCardsView() {
       last,
       args: [index]
     }) => {
-      // When the volocity is greater than 0.3, we consider it's a flick and fly out the card.
-      const flick = velocity > 0.3;
+      // When the volocity is greater than 0.5, we consider it's a flick and fly out the card.
+      const flick = velocity > 0.5;
       // Determine which direction the card should fly out to.
       let direction;
       if (_flyoutToBottomLeft) {
