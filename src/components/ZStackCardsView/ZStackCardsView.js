@@ -16,8 +16,14 @@ let _inboxEnter, _reminderEnter, _timeout;
 let _currentPopupButton, _selectedAction;
 let _flyoutToBottomLeft = false,
   _flyoutToBottomRight = false;
-let _triggerFullEmailView = false,
-  _fullEmailView = false;
+
+const EmailViewMode = Object.freeze({
+  preview: 0,
+  full: 2,
+  previewEnteringFull: 3,
+  fullEnteringPreview: 4
+});
+let _emailViewMode = EmailViewMode.preview;
 
 function ZStackCardsView() {
   const [
@@ -174,6 +180,7 @@ function ZStackCardsView() {
     }) => {
       // When the volocity is greater than 0.5, we consider it's a flick and fly out the card.
       const flick = velocity > 0.5;
+
       // Determine which direction the card should fly out to.
       let direction;
       if (_flyoutToBottomLeft) {
@@ -184,12 +191,15 @@ function ZStackCardsView() {
         direction = directionX < 0 ? -1 : 1;
       }
 
-      if (
-        !_fullEmailView &&
-        (_flyoutToBottomLeft ||
-          _flyoutToBottomRight ||
-          (!down && flick && directionY >= 0))
-      ) {
+      const cardDismissed =
+        _flyoutToBottomLeft ||
+        _flyoutToBottomRight ||
+        (!down && flick && directionY >= 0) ||
+        (!down && Math.abs(deltaX) >= window.innerWidth / 2);
+
+      if (_emailViewMode === EmailViewMode.full && cardDismissed) {
+        _emailViewMode = EmailViewMode.fullEnteringPreview;
+      } else if (_emailViewMode === EmailViewMode.preview && cardDismissed) {
         _flyoutToBottomLeft = _flyoutToBottomRight = false;
 
         // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out.
@@ -204,9 +214,10 @@ function ZStackCardsView() {
       ) {
         dispatch({ type: "enterFullEmailView" });
 
-        _triggerFullEmailView = true;
-        _fullEmailView = true;
+        _emailViewMode = EmailViewMode.previewEnteringFull;
       }
+
+      const removed = removedEmailPreviewCards.has(index);
 
       set(i => {
         // TODO: Currently only interested in changing the current spring.
@@ -214,8 +225,6 @@ function ZStackCardsView() {
         // other cards. For example, by dragging the current card down, then
         // fade in the card underneath it.
         if (index !== i) return;
-
-        const removed = removedEmailPreviewCards.has(index);
 
         let x = 0,
           y = 0,
@@ -225,7 +234,7 @@ function ZStackCardsView() {
           scaleXBg = 1,
           scaleYBg = 1;
 
-        if (_triggerFullEmailView) {
+        if (_emailViewMode === EmailViewMode.previewEnteringFull) {
           yContent = -80;
           scaleXBg = 1.2;
           scaleYBg = 2.2;
@@ -259,23 +268,27 @@ function ZStackCardsView() {
           scale,
           scaleXBg,
           scaleYBg,
-          config: { friction: 32, tension: down ? 400 : removed ? 50 : 300 }
+          config: { friction: 28, tension: down ? 400 : removed ? 50 : 300 }
         };
       });
 
-      if (last && !down) {
+      if (removed && !down && last) {
         set(i => {
-          if (!_triggerFullEmailView && i < emailPreviewCards.length) {
+          if (i < emailPreviewCards.length) {
             return cardSpringDataTo(emailPreviewCards.length, i);
           }
         });
-
-        if (!_triggerFullEmailView) {
-          _fullEmailView = false;
-        }
       }
 
-      _triggerFullEmailView = false;
+      switch (_emailViewMode) {
+        case EmailViewMode.previewEnteringFull:
+          _emailViewMode = EmailViewMode.full;
+          break;
+        case EmailViewMode.fullEnteringPreview:
+          _emailViewMode = EmailViewMode.preview;
+          break;
+        default:
+      }
 
       // if (!down && gone.size === originalSize)
       //   setTimeout(() => gone.clear() || set(i => to(i)), 600);
