@@ -19,9 +19,9 @@ let _flyoutToBottomLeft = false,
 
 const EmailViewMode = Object.freeze({
   preview: 0,
-  full: 2,
-  previewEnteringFull: 3,
-  fullEnteringPreview: 4
+  full: 1,
+  previewEnteringFull: 2,
+  fullEnteringPreview: 3
 });
 let _emailViewMode = EmailViewMode.preview;
 
@@ -39,7 +39,7 @@ function ZStackCardsView() {
     dispatch
   ] = useStateValue();
 
-  console.log("emailPreviewCards", emailPreviewCards);
+  // console.log("emailPreviewCards", emailPreviewCards);
 
   const handleAdditionalActionsOnTouchOver = e => {
     const touches = e.changedTouches;
@@ -191,15 +191,21 @@ function ZStackCardsView() {
         direction = directionX < 0 ? -1 : 1;
       }
 
-      const cardDismissed =
+      const canCloseDetailView =
+        _flyoutToBottomLeft ||
+        _flyoutToBottomRight ||
+        (!down && flick && directionY >= 0) ||
+        (!down && deltaY >= window.innerHeight / 2);
+
+      const canDismissCard =
         _flyoutToBottomLeft ||
         _flyoutToBottomRight ||
         (!down && flick && directionY >= 0) ||
         (!down && Math.abs(deltaX) >= window.innerWidth / 2);
 
-      if (_emailViewMode === EmailViewMode.full && cardDismissed) {
+      if (_emailViewMode === EmailViewMode.full && canCloseDetailView) {
         _emailViewMode = EmailViewMode.fullEnteringPreview;
-      } else if (_emailViewMode === EmailViewMode.preview && cardDismissed) {
+      } else if (_emailViewMode === EmailViewMode.preview && canDismissCard) {
         _flyoutToBottomLeft = _flyoutToBottomRight = false;
 
         // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out.
@@ -234,7 +240,14 @@ function ZStackCardsView() {
           scaleXBg = 1,
           scaleYBg = 1;
 
-        if (_emailViewMode === EmailViewMode.previewEnteringFull) {
+        if (_emailViewMode === EmailViewMode.full) {
+          x = deltaX;
+          y = deltaY;
+          yContent = -80;
+          scale = (-y / (window.innerHeight / 4)) * 0.15 + 1;
+          scaleXBg = (scale / 1.1) * 1.2;
+          scaleYBg = (scale / 1.1) * 1.6;
+        } else if (_emailViewMode === EmailViewMode.previewEnteringFull) {
           yContent = -80;
           scaleXBg = 1.2;
           scaleYBg = 2.2;
@@ -272,12 +285,29 @@ function ZStackCardsView() {
         };
       });
 
-      if (removed && !down && last) {
-        set(i => {
-          if (i < emailPreviewCards.length) {
-            return cardSpringDataTo(emailPreviewCards.length, i);
-          }
-        });
+      if (!down && last) {
+        if (_emailViewMode === EmailViewMode.full) {
+          set(i => {
+            if (index === i) {
+              return {
+                x: 0,
+                y: 0,
+                yContent: -80,
+                rotation: 0,
+                scale: 1.1,
+                scaleXBg: 1.2,
+                scaleYBg: 2.2,
+                config: { friction: 28, tension: 300 }
+              };
+            }
+          });
+        } else if (removed) {
+          set(i => {
+            if (i < emailPreviewCards.length) {
+              return cardSpringDataTo(emailPreviewCards.length, i);
+            }
+          });
+        }
       }
 
       switch (_emailViewMode) {
