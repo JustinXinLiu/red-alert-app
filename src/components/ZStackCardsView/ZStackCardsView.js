@@ -195,7 +195,7 @@ function ZStackCardsView() {
         _flyoutToBottomLeft ||
         _flyoutToBottomRight ||
         (!down && flick && directionY >= 0) ||
-        (!down && deltaY >= window.innerHeight / 2);
+        (!down && deltaY >= window.innerHeight / 4);
 
       const canDismissCard =
         _flyoutToBottomLeft ||
