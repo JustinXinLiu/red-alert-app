@@ -1,5 +1,12 @@
 import React, { createContext, useContext } from "react";
 
+export const EmailViewMode = Object.freeze({
+  preview: 0,
+  full: 1,
+  previewEnteringFull: 2,
+  fullEnteringPreview: 3
+});
+
 export const InitialState = {
   user: undefined,
   authenticated: false,
@@ -27,7 +34,7 @@ export const InitialState = {
     delay: i * 50
   }),
   touchState: { overInbox: false, overReminder: false },
-  enterEmailView: false
+  emailViewMode: EmailViewMode.preview
 };
 
 export const Reducer = (state, action) => {
@@ -80,15 +87,10 @@ export const Reducer = (state, action) => {
       return {
         ...state
       };
-    case "enterFullEmailView":
+    case "UpdateEmailViewMode":
       return {
         ...state,
-        enterEmailView: true
-      };
-    case "exitFullEmailView":
-      return {
-        ...state,
-        enterEmailView: false
+        emailViewMode: action.payload
       };
 
     default:

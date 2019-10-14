@@ -2,7 +2,7 @@ import React from "react";
 import "./ZStackCardsView.scss";
 import { useSprings, animated, to } from "react-spring";
 import { useDrag } from "react-use-gesture";
-import { useStateValue } from "../../Store";
+import { EmailViewMode, useStateValue } from "../../Store";
 import { EmailPreviewCard } from "../../components";
 
 // This is being used down there in the view, it interpolates rotation and scale into a css transform.
@@ -17,12 +17,6 @@ let _currentPopupButton, _selectedAction;
 let _flyoutToBottomLeft = false,
   _flyoutToBottomRight = false;
 
-const EmailViewMode = Object.freeze({
-  preview: 0,
-  full: 1,
-  previewEnteringFull: 2,
-  fullEnteringPreview: 3
-});
 let _emailViewMode = EmailViewMode.preview;
 
 function ZStackCardsView() {
@@ -34,7 +28,6 @@ function ZStackCardsView() {
       cardSpringDataFrom,
       cardSpringDataTo,
       touchState
-      // enterEmailView
     },
     dispatch
   ] = useStateValue();
@@ -205,6 +198,11 @@ function ZStackCardsView() {
 
       if (_emailViewMode === EmailViewMode.full && canCloseDetailView) {
         _emailViewMode = EmailViewMode.fullEnteringPreview;
+
+        dispatch({
+          type: "UpdateEmailViewMode",
+          payload: EmailViewMode.fullEnteringPreview
+        });
       } else if (_emailViewMode === EmailViewMode.preview && canDismissCard) {
         _flyoutToBottomLeft = _flyoutToBottomRight = false;
 
@@ -218,9 +216,12 @@ function ZStackCardsView() {
         ((flick && directionY < 0 && deltaY < 0) ||
           deltaY <= -window.innerHeight / 6)
       ) {
-        dispatch({ type: "enterFullEmailView" });
-
         _emailViewMode = EmailViewMode.previewEnteringFull;
+
+        dispatch({
+          type: "UpdateEmailViewMode",
+          payload: EmailViewMode.previewEnteringFull
+        });
       }
 
       const removed = removedEmailPreviewCards.has(index);
@@ -313,9 +314,19 @@ function ZStackCardsView() {
       switch (_emailViewMode) {
         case EmailViewMode.previewEnteringFull:
           _emailViewMode = EmailViewMode.full;
+
+          dispatch({
+            type: "UpdateEmailViewMode",
+            payload: EmailViewMode.full
+          });
           break;
         case EmailViewMode.fullEnteringPreview:
           _emailViewMode = EmailViewMode.preview;
+
+          dispatch({
+            type: "UpdateEmailViewMode",
+            payload: EmailViewMode.preview
+          });
           break;
         default:
       }
