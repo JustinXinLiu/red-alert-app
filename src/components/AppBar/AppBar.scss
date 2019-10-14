@@ -5,8 +5,8 @@
   top: 24px;
   left: 0;
   right: 0;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  display: flex;
+  justify-content: space-between;
   margin: 0 24px;
   z-index: 1;
 }
