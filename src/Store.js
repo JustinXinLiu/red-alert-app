@@ -17,7 +17,7 @@ export const InitialState = {
   cardSpringDataFrom: () => ({
     x: 0,
     y: window.outerHeight,
-    yContent: 0,
+    h: "56vh",
     rotation: 0,
     scale: 1,
     scalgXBg: 1,
@@ -26,7 +26,7 @@ export const InitialState = {
   cardSpringDataTo: (count, i) => ({
     x: 0,
     y: (count - 1 - i) * -18,
-    yContent: 0,
+    h: "56vh",
     scale: 1,
     scaleXBg: 1,
     scaleYBg: 1,

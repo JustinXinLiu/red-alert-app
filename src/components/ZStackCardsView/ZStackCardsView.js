@@ -6,9 +6,8 @@ import { EmailViewMode, useStateValue } from "../../Store";
 import { EmailPreviewCard } from "../../components";
 
 // This is being used down there in the view, it interpolates rotation and scale into a css transform.
-const toCardTransform = (y, r, s) =>
-  `translate3d(0, ${y}px, 0) rotateY(${r /
-    10}deg) rotateZ(${r}deg) scale(${s})`;
+const toCardTransform = (r, s) =>
+  `rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
 const toCardBgTransform = (r, sx, sy) =>
   `rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${sx}, ${sy})`;
 
@@ -235,7 +234,7 @@ function ZStackCardsView() {
 
         let x = 0,
           y = 0,
-          yContent = 0,
+          h = "56vh",
           rotation = 0,
           scale = 1,
           scaleXBg = 1,
@@ -244,13 +243,13 @@ function ZStackCardsView() {
         if (_emailViewMode === EmailViewMode.full) {
           x = deltaX;
           y = deltaY;
-          yContent = -80;
+          h = "85vh";
           scale = (-y / (window.innerHeight / 4)) * 0.15 + 1;
           scaleXBg = (scale / 1.1) * 1.2;
           scaleYBg = (scale / 1.1) * 1.6;
         } else if (_emailViewMode === EmailViewMode.previewEnteringFull) {
-          yContent = -80;
-          scaleXBg = 1.2;
+          h = "85vh";
+          scaleXBg = 1.3;
           scaleYBg = 2.2;
           scale = 1.1;
         } else {
@@ -277,7 +276,7 @@ function ZStackCardsView() {
         return {
           x,
           y,
-          yContent,
+          h,
           rotation,
           scale,
           scaleXBg,
@@ -293,10 +292,10 @@ function ZStackCardsView() {
               return {
                 x: 0,
                 y: 0,
-                yContent: -80,
+                h: "85vh",
                 rotation: 0,
                 scale: 1.1,
-                scaleXBg: 1.2,
+                scaleXBg: 1.3,
                 scaleYBg: 2.2,
                 config: { friction: 28, tension: 300 }
               };
@@ -337,42 +336,41 @@ function ZStackCardsView() {
   );
 
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
-  return springs.map(
-    ({ x, y, yContent, rotation, scale, scaleXBg, scaleYBg }, i) => (
+  return springs.map(({ x, y, h, rotation, scale, scaleXBg, scaleYBg }, i) => (
+    <animated.div
+      className="card-wrapper"
+      key={i}
+      style={{
+        transform: to(
+          [x, y],
+          (x, y) =>
+            `perspective(100px) translate3d(${x}px, ${y}px, ${-4 *
+              (emailPreviewCards.length - i)}px)`
+        )
+      }}
+    >
       <animated.div
-        className="card-wrapper"
-        key={i}
+        className="card bg"
         style={{
-          transform: to(
-            [x, y],
-            (x, y) =>
-              `perspective(100px) translate3d(${x}px, ${y}px, ${-4 *
-                (emailPreviewCards.length - i)}px)`
-          )
+          transform: to([rotation, scaleXBg, scaleYBg], toCardBgTransform)
         }}
+      ></animated.div>
+      {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which). */}
+      <animated.div
+        className="card"
+        {...gesture(i)}
+        style={{
+          height: h,
+          transform: to([rotation, scale], toCardTransform)
+        }}
+        onTouchMove={handleAdditionalActionsOnTouchOver}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchCancel}
       >
-        <animated.div
-          className="card bg"
-          style={{
-            transform: to([rotation, scaleXBg, scaleYBg], toCardBgTransform)
-          }}
-        ></animated.div>
-        {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which). */}
-        <animated.div
-          className="card"
-          {...gesture(i)}
-          style={{
-            transform: to([yContent, rotation, scale], toCardTransform)
-          }}
-          onTouchMove={handleAdditionalActionsOnTouchOver}
-          onTouchEnd={handleTouchEnd}
-          onTouchCancel={handleTouchCancel}
-        >
-          <EmailPreviewCard mail={emailPreviewCards[i]} />
-        </animated.div>
+        <EmailPreviewCard mail={emailPreviewCards[i]} />
       </animated.div>
-    )
-  );
+    </animated.div>
+  ));
 }
 
 export default ZStackCardsView;

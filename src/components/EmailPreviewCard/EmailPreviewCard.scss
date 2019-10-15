@@ -71,3 +71,9 @@ p.email-body {
   white-space: pre-line;
   overflow: hidden;
 }
+
+.email-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
