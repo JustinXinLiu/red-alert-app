@@ -1,1 +1,18 @@
 @import "../../styles/shared.scss";
+
+.clock-hand {
+  transform-origin: 50% 50%;
+
+  &.animated {
+    animation: clock-hand-rotation 6s infinite linear;
+  }
+
+  @keyframes clock-hand-rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(359deg);
+    }
+  }
+}
