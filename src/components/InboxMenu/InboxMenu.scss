@@ -1,18 +1,18 @@
 @import "../../styles/shared.scss";
 
-.envelope {
-  transform-origin: 50% 50%;
+// .envelope {
+//   transform-origin: 50% 50%;
 
-  &.animated {
-    animation: envelope-open 6s infinite linear;
-  }
+//   &.animated {
+//     animation: envelope-open 6s infinite linear;
+//   }
 
-  @keyframes envelope-open {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(359deg);
-    }
-  }
-}
+//   @keyframes envelope-open {
+//     from {
+//       transform: rotate(0deg);
+//     }
+//     to {
+//       transform: rotate(359deg);
+//     }
+//   }
+// }
