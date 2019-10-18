@@ -3,8 +3,7 @@ import "./MessageView.scss";
 import { useStateValue } from "../../Store";
 
 function MessageView(props) {
-  const [{ emailPreviewCards }, dispatch] = useStateValue();
-  console.log("dispatch", dispatch);
+  const [{ emailPreviewCards }] = useStateValue();
 
   return (
     <div className="MessageView">

@@ -180,7 +180,11 @@ function ZStackCardsView() {
       } else if (_flyoutToBottomRight) {
         direction = 1;
       } else {
-        direction = directionX < 0 ? -1 : 1;
+        if (!flick || (flick && Math.abs(directionX) < 0.1)) {
+          direction = deltaX < 0 ? -1 : 1;
+        } else {
+          direction = directionX < 0 ? -1 : 1;
+        }
       }
 
       const canCloseDetailView =
@@ -192,11 +196,18 @@ function ZStackCardsView() {
       const canDismissCard =
         _flyoutToBottomLeft ||
         _flyoutToBottomRight ||
-        (!down &&
-          flick &&
-          directionY >= 0 &&
-          Math.abs(deltaX) >= window.innerWidth / 4) ||
-        (!down && Math.abs(deltaX) >= window.innerWidth / 2);
+        (!down && flick && Math.abs(directionX) > Math.abs(directionY)) ||
+        (!down && !flick && Math.abs(deltaX) >= window.innerWidth / 3);
+
+      console.log("--------------------------------------");
+      console.log("down", down);
+      console.log("flick", flick);
+      console.log("directionX", directionX);
+      console.log("directionY", directionY);
+      console.log("direction", direction);
+      console.log("deltaX", deltaX);
+      console.log("deltaY", deltaY);
+      console.log("window.innerWidth", window.innerWidth);
 
       if (_emailViewMode === EmailViewMode.full && canCloseDetailView) {
         _emailViewMode = EmailViewMode.fullEnteringPreview;
@@ -215,7 +226,10 @@ function ZStackCardsView() {
           dispatch({ type: "removeEmailPreviewCard", payload: index });
       } else if (
         !down &&
-        ((flick && directionY < 0 && deltaY < 0) ||
+        ((flick &&
+          directionY < 0 &&
+          deltaY < 0 &&
+          Math.abs(directionY) > Math.abs(directionX)) ||
           deltaY <= -window.innerHeight / 6)
       ) {
         _emailViewMode = EmailViewMode.previewEnteringFull;
@@ -270,9 +284,7 @@ function ZStackCardsView() {
             scale = (-y / (window.innerHeight / 4)) * 0.15 + 1;
             scaleXBg = scale;
             scaleYBg = scale;
-
-            // Only add rotation when dragging down.
-            if (y > 0) rotation = deltaX / 32;
+            rotation = deltaX / 32;
           }
         }
 

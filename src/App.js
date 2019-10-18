@@ -3,7 +3,7 @@ import { StoreProvider, Reducer, InitialState } from "./Store";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import "./App.scss";
-import { AppBar, ActionBar, ZStackCardsView } from "./components";
+import { AppBar, ActionBar, ZStackCardsView, MessageView } from "./components";
 import config from "./Config";
 import { UserAgentApplication } from "msal";
 import { getUserDetails, getMails } from "./services/GraphService";
@@ -105,7 +105,7 @@ function App() {
         <div className="App">
           <AppBar />
 
-          {/* <MessageView /> */}
+          <MessageView />
 
           <ZStackCardsView />
 
