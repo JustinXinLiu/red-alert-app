@@ -192,7 +192,10 @@ function ZStackCardsView() {
       const canDismissCard =
         _flyoutToBottomLeft ||
         _flyoutToBottomRight ||
-        (!down && flick && directionY >= 0) ||
+        (!down &&
+          flick &&
+          directionY >= 0 &&
+          Math.abs(deltaX) >= window.innerWidth / 4) ||
         (!down && Math.abs(deltaX) >= window.innerWidth / 2);
 
       if (_emailViewMode === EmailViewMode.full && canCloseDetailView) {
