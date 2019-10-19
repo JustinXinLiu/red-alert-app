@@ -170,6 +170,8 @@ function ZStackCardsView() {
       last,
       args: [index]
     }) => {
+      // if (_emailViewMode === EmailViewMode.full) return;
+
       // When the volocity is greater than 0.5, we consider it's a flick and fly out the card.
       const flick = velocity > 0.5;
 

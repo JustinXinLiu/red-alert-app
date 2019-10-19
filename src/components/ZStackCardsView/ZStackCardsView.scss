@@ -14,7 +14,8 @@
     width: 85vw;
     height: 56vh;
     will-change: transform;
-    touch-action: none;
+    // touch-action: none;
+    overflow: auto;
   }
 
   .card.bg {

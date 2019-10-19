@@ -1,9 +1,19 @@
 import React from "react";
 import "./EmailPreviewCard.scss";
+import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import SvgIcon from "@material-ui/core/SvgIcon";
+import CloseIcon from "@material-ui/icons/Close";
 import { EmailViewMode, useStateValue } from "../../Store";
 import { useTransition, animated } from "react-spring";
+
+const useStyles = makeStyles(theme => ({
+  closeButton: {
+    position: "fixed", // todo: need to make this sticky.
+    top: -16,
+    right: 12
+  }
+}));
 
 function EmailPreviewCard(props) {
   const [{ emailViewMode }] = useStateValue();
@@ -28,7 +38,7 @@ function EmailPreviewCard(props) {
     };
   }
 
-  const { subject, from, toRecipients, bodyPreview } = mail;
+  const { subject, from, toRecipients, bodyPreview, body } = mail;
 
   let senderName, toText;
   if (from && from.emailAddress) {
@@ -43,6 +53,8 @@ function EmailPreviewCard(props) {
       toText = "";
   }
 
+  const classes = useStyles();
+
   return (
     <div className="EmailPreviewCard">
       <div className="email-type">
@@ -54,7 +66,21 @@ function EmailPreviewCard(props) {
         <div className="name">{senderName}</div>
         <div className="to-list">{`To ${toText}`}</div>
       </section>
-      <p className="email-body">{bodyPreview}</p>
+
+      {transitions.map(({ item, key, props }) =>
+        item ? (
+          <p
+            className="email-body"
+            key={key}
+            style={props}
+            dangerouslySetInnerHTML={{ __html: body ? body.content : "" }}
+          ></p>
+        ) : (
+          <p className="email-body" key={key} style={props}>
+            {bodyPreview}
+          </p>
+        )
+      )}
 
       {transitions.map(
         ({ item, key, props }) =>
@@ -79,6 +105,15 @@ function EmailPreviewCard(props) {
                 </SvgIcon>
               </IconButton>
             </animated.div>
+          )
+      )}
+
+      {transitions.map(
+        ({ item, key, props }) =>
+          item && (
+            <IconButton className={classes.closeButton} aria-label="close">
+              <CloseIcon />
+            </IconButton>
           )
       )}
     </div>
