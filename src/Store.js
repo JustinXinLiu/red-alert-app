@@ -34,7 +34,8 @@ export const InitialState = {
     delay: i * 50
   }),
   touchState: { overInbox: false, overReminder: false },
-  emailViewMode: EmailViewMode.preview
+  emailViewMode: EmailViewMode.preview,
+  message: ""
 };
 
 export const Reducer = (state, action) => {
@@ -77,15 +78,20 @@ export const Reducer = (state, action) => {
       };
     case "archiveEmail":
       return {
-        ...state
+        ...state,
+        message: "email archived"
       };
     case "ignoreEmail":
       return {
-        ...state
+        ...state,
+        message: "email ignored"
       };
     case "remindEmailInTime":
       return {
-        ...state
+        ...state,
+        message: `snooze in ${action.payload} ${
+          action.payload === 1 ? "hour" : "hours"
+        }`
       };
     case "UpdateEmailViewMode":
       return {

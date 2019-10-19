@@ -128,7 +128,7 @@ function ZStackCardsView() {
               break;
             case "reminderTime3":
               _flyoutToBottomLeft = true;
-              dispatch({ type: "remindEmailInTime", paylaod: 24 });
+              dispatch({ type: "remindEmailInTime", payload: 24 });
               break;
             default:
           }
@@ -199,15 +199,15 @@ function ZStackCardsView() {
         (!down && flick && Math.abs(directionX) > Math.abs(directionY)) ||
         (!down && !flick && Math.abs(deltaX) >= window.innerWidth / 3);
 
-      console.log("--------------------------------------");
-      console.log("down", down);
-      console.log("flick", flick);
-      console.log("directionX", directionX);
-      console.log("directionY", directionY);
-      console.log("direction", direction);
-      console.log("deltaX", deltaX);
-      console.log("deltaY", deltaY);
-      console.log("window.innerWidth", window.innerWidth);
+      // console.log("-----------------------------------");
+      // console.log("down", down);
+      // console.log("flick", flick);
+      // console.log("directionX", directionX);
+      // console.log("directionY", directionY);
+      // console.log("direction", direction);
+      // console.log("deltaX", deltaX);
+      // console.log("deltaY", deltaY);
+      // console.log("window.innerWidth", window.innerWidth);
 
       if (_emailViewMode === EmailViewMode.full && canCloseDetailView) {
         _emailViewMode = EmailViewMode.fullEnteringPreview;
@@ -217,13 +217,20 @@ function ZStackCardsView() {
           payload: EmailViewMode.fullEnteringPreview
         });
       } else if (_emailViewMode === EmailViewMode.preview && canDismissCard) {
-        _flyoutToBottomLeft = _flyoutToBottomRight = false;
+        if (_flyoutToBottomLeft || _flyoutToBottomRight) {
+          _flyoutToBottomLeft = _flyoutToBottomRight = false;
+        } else {
+          direction === -1
+            ? dispatch({ type: "remindEmailInTime", payload: 1 })
+            : dispatch({ type: "archiveEmail" });
+        }
 
         // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out.
         removedEmailPreviewCards.add(index);
 
-        if (index > -1)
+        if (index > -1) {
           dispatch({ type: "removeEmailPreviewCard", payload: index });
+        }
       } else if (
         !down &&
         ((flick &&
