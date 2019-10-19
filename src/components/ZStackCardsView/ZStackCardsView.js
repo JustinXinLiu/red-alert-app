@@ -217,6 +217,9 @@ function ZStackCardsView() {
       // console.log("deltaX", deltaX);
       // console.log("deltaY", deltaY);
       // console.log("window.innerWidth", window.innerWidth);
+      // console.log("_emailViewMode", _emailViewMode);
+      // console.log("canCloseDetailView", canCloseDetailView);
+      // console.log("canDismissCard", canDismissCard);
 
       if (_emailViewMode === EmailViewMode.full && canCloseDetailView) {
         _emailViewMode = EmailViewMode.fullEnteringPreview;
@@ -275,6 +278,7 @@ function ZStackCardsView() {
 
         if (_emailViewMode === EmailViewMode.full) {
           if (deltaX === 0 || deltaY < 0) return;
+
           x = deltaX;
           y = deltaY;
           h = "85vh";
