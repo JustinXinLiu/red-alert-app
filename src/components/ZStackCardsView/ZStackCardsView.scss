@@ -16,20 +16,24 @@
     will-change: transform;
     // touch-action: none;
     overflow: auto;
-  }
 
-  .card.bg {
-    position: absolute;
-    background-color: white;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
-    transition: box-shadow 0.2s;
-
-    & > div.card-bg:hover {
-      box-shadow: 0 2px 40px 4px rgba(0, 0, 0, 0.08);
+    &::-webkit-scrollbar {
+      display: none;
     }
 
-    /* .& > div.card-bg:active {
+    &.bg {
+      position: absolute;
+      background-color: white;
+      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+      transition: box-shadow 0.2s;
+
+      & > div.card-bg:hover {
+        box-shadow: 0 2px 40px 4px rgba(0, 0, 0, 0.08);
+      }
+
+      /* .& > div.card-bg:active {
       box-shadow: 0 2px 40px 4px rgba(0, 0, 0, 0.12);
     } */
+    }
   }
 }

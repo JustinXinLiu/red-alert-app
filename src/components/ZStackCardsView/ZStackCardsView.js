@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef, useRef } from "react";
 import "./ZStackCardsView.scss";
 import { useSprings, animated, to } from "react-spring";
 import { useDrag } from "react-use-gesture";
@@ -30,6 +30,8 @@ function ZStackCardsView() {
     },
     dispatch
   ] = useStateValue();
+
+  const cardRefs = useRef(emailPreviewCards.map(createRef));
 
   // console.log("emailPreviewCards", emailPreviewCards);
 
@@ -170,7 +172,12 @@ function ZStackCardsView() {
       last,
       args: [index]
     }) => {
-      // if (_emailViewMode === EmailViewMode.full) return;
+      // console.log("Current card ref", cardRefs.current[index].current);
+      if (
+        _emailViewMode === EmailViewMode.full &&
+        cardRefs.current[index].current.scrollTop !== 0
+      )
+        return;
 
       // When the volocity is greater than 0.5, we consider it's a flick and fly out the card.
       const flick = velocity > 0.5;
@@ -267,12 +274,13 @@ function ZStackCardsView() {
           scaleYBg = 1;
 
         if (_emailViewMode === EmailViewMode.full) {
+          if (deltaX === 0 || deltaY < 0) return;
           x = deltaX;
           y = deltaY;
           h = "85vh";
           scale = (-y / (window.innerHeight / 4)) * 0.15 + 1;
           scaleXBg = (scale / 1.1) * 1.2;
-          scaleYBg = (scale / 1.1) * 1.6;
+          scaleYBg = (scale / 1.1) * 1.7;
         } else if (_emailViewMode === EmailViewMode.previewEnteringFull) {
           h = "85vh";
           scaleXBg = 1.3;
@@ -285,7 +293,6 @@ function ZStackCardsView() {
             y = window.innerHeight;
             // How much the card tilts, flicking it harder makes it rotate faster.
             rotation = deltaX / 80 + direction * 2 * velocity;
-            // When the finger is lifted up...
           } else if (down) {
             x = deltaX;
             y = deltaY;
@@ -390,6 +397,7 @@ function ZStackCardsView() {
         onTouchMove={handleAdditionalActionsOnTouchOver}
         onTouchEnd={handleTouchEnd}
         onTouchCancel={handleTouchCancel}
+        ref={cardRefs.current[i]}
       >
         <EmailPreviewCard mail={emailPreviewCards[i]} />
       </animated.div>

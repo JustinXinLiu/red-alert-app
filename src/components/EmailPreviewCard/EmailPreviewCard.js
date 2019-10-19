@@ -108,13 +108,26 @@ function EmailPreviewCard(props) {
           )
       )}
 
-      {transitions.map(
+      {/* {transitions.map(
         ({ item, key, props }) =>
           item && (
-            <IconButton className={classes.closeButton} aria-label="close">
+            <IconButton
+              key={key}
+              style={props}
+              className={classes.closeButton}
+              aria-label="close"
+            >
               <CloseIcon />
             </IconButton>
           )
+      )} */}
+
+      {emailViewMode === EmailViewMode.full ? (
+        <IconButton className={classes.closeButton} aria-label="close">
+          <CloseIcon />
+        </IconButton>
+      ) : (
+        <></>
       )}
     </div>
   );
