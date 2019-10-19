@@ -73,7 +73,10 @@ p.email-body {
 }
 
 .email-actions {
+  position: sticky;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 12px;
 }

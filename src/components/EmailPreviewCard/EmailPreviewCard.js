@@ -10,7 +10,7 @@ import { useTransition, animated } from "react-spring";
 const useStyles = makeStyles(theme => ({
   closeButton: {
     position: "fixed", // todo: need to make this sticky.
-    top: -16,
+    top: 0,
     right: 12
   }
 }));
