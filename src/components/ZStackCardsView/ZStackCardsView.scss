@@ -14,12 +14,18 @@
     width: 85vw;
     height: 56vh;
     will-change: transform;
-    // touch-action: none;
-    overflow: auto;
+    overflow: hidden;
+    touch-action: none;
 
-    &::-webkit-scrollbar {
-      display: none;
+    &.full {
+      overflow: auto;
+      touch-action: auto;
+      overscroll-behavior: contain;
     }
+
+    // &::-webkit-scrollbar {
+    //   display: none;
+    // }
 
     &.bg {
       position: absolute;

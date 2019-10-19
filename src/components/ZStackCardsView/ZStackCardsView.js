@@ -392,7 +392,9 @@ function ZStackCardsView() {
       ></animated.div>
       {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which). */}
       <animated.div
-        className="card"
+        className={`card ${
+          _emailViewMode === EmailViewMode.full ? "full" : ""
+        }`}
         {...gesture(i)}
         style={{
           height: h,
