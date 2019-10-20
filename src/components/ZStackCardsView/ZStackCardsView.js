@@ -172,12 +172,14 @@ function ZStackCardsView() {
       last,
       args: [index]
     }) => {
-      // console.log("Current card ref", cardRefs.current[index].current);
-      if (
-        _emailViewMode === EmailViewMode.full &&
-        cardRefs.current[index].current.scrollTop !== 0
-      )
-        return;
+      if (_emailViewMode === EmailViewMode.full) {
+        const currentCard = cardRefs.current[index].current;
+        // todo: This is currently a hack that tells if the card is being interated with.
+        var scaleX =
+          currentCard.getBoundingClientRect().width / currentCard.offsetWidth;
+        // console.log("scaleX", scaleX);
+        if (currentCard.scrollTop !== 0 && scaleX > 1) return;
+      }
 
       // When the volocity is greater than 0.5, we consider it's a flick and fly out the card.
       const flick = velocity > 0.5;
@@ -223,7 +225,6 @@ function ZStackCardsView() {
 
       if (_emailViewMode === EmailViewMode.full && canCloseDetailView) {
         _emailViewMode = EmailViewMode.fullEnteringPreview;
-
         dispatch({
           type: "UpdateEmailViewMode",
           payload: EmailViewMode.fullEnteringPreview
@@ -278,7 +279,6 @@ function ZStackCardsView() {
 
         if (_emailViewMode === EmailViewMode.full) {
           if (deltaX === 0 || deltaY < 0) return;
-
           x = deltaX;
           y = deltaY;
           h = "85vh";

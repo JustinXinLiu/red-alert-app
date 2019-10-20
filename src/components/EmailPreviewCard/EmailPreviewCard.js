@@ -22,9 +22,9 @@ function EmailPreviewCard(props) {
     emailViewMode === EmailViewMode.full,
     null,
     {
-      from: { opacity: 0, transform: "translate3d(0,-25%,0)" },
-      enter: { opacity: 1, transform: "translate3d(0,0,0)" },
-      leave: { opacity: 0, transform: "translate3d(0,-25%,0)" }
+      from: { opacity: 0 },
+      enter: { opacity: 1 },
+      leave: { opacity: 0 }
     }
   );
 
@@ -88,20 +88,32 @@ function EmailPreviewCard(props) {
             <animated.div className="email-actions" key={key} style={props}>
               <IconButton aria-label="menu">
                 <SvgIcon>
-                  <path d="M9.51654 2L1 8.90476L9.51654 16.2857V11.5238C13.5382 11.5238 17.0868 13.0952 18.9794 16.2857V16.0476C18.9794 10.9048 14.7211 6.76191 9.51654 6.76191V2Z" />
+                  <path
+                    color="#444240"
+                    d="M9.51654 2L1 8.90476L9.51654 16.2857V11.5238C13.5382 11.5238 17.0868 13.0952 18.9794 16.2857V16.0476C18.9794 10.9048 14.7211 6.76191 9.51654 6.76191V2Z"
+                  />
                 </SvgIcon>
               </IconButton>
 
               <IconButton aria-label="reply-all">
                 <SvgIcon>
-                  <path d="M14.6591 2L6.14258 8.90476L14.6591 16.2857V11.5238C18.6808 11.5238 22.2294 13.0952 24.1219 16.2857V16.0476C24.1219 10.9048 19.8637 6.76191 14.6591 6.76191V2Z" />
-                  <path d="M9.92768 16.2857L1.41113 8.90476L9.92768 2" />
+                  <path
+                    color="#444240"
+                    d="M14.6591 2L6.14258 8.90476L14.6591 16.2857V11.5238C18.6808 11.5238 22.2294 13.0952 24.1219 16.2857V16.0476C24.1219 10.9048 19.8637 6.76191 14.6591 6.76191V2Z"
+                  />
+                  <path
+                    color="#444240"
+                    d="M9.92768 16.2857L1.41113 8.90476L9.92768 2"
+                  />
                 </SvgIcon>
               </IconButton>
 
               <IconButton aria-label="forward">
                 <SvgIcon>
-                  <path d="M10.0168 2L18.5333 9.14286L10.0168 16.2857V11.5238H0.553955V6.76191H10.0168V2Z" />
+                  <path
+                    color="#444240"
+                    d="M10.0168 2L18.5333 9.14286L10.0168 16.2857V11.5238H0.553955V6.76191H10.0168V2Z"
+                  />
                 </SvgIcon>
               </IconButton>
             </animated.div>

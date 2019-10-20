@@ -76,7 +76,9 @@ p.email-body {
   position: sticky;
   left: 24px;
   right: 24px;
-  bottom: 24px;
+  bottom: 0;
   display: flex;
   justify-content: space-between;
+  background-color: white;
+  padding-bottom: 24px;
 }
